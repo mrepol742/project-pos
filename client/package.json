@@ -39,7 +39,7 @@
         "js-cookie": "^3.0.5",
         "prop-types": "^15.8.1",
         "react": "^19.0.0",
-        "react-calendar": "^5.1.0",
+        "react-calendar": "^6.0.0",
         "react-dom": "^19.0.0",
         "react-helmet": "^6.1.0",
         "react-redux": "^9.2.0",
