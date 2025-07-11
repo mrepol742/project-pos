@@ -1,0 +1,5 @@
+/**
+ * © 2025 Melvin Jones Repol. All rights reserved.
+ * This project is licensed under the MIT License with Commons Clause.
+*/
+var e,t;function r(){if(t)return e;t=1;const r=(e,t,r,o)=>{if("length"===r||"prototype"===r)return;if("arguments"===r||"caller"===r)return;const i=Object.getOwnPropertyDescriptor(e,r),c=Object.getOwnPropertyDescriptor(t,r);!n(i,c)&&o||Object.defineProperty(e,r,c)},n=function(e,t){return void 0===e||e.configurable||e.writable===t.writable&&e.enumerable===t.enumerable&&e.configurable===t.configurable&&(e.writable||e.value===t.value)},o=(e,t)=>`/* Wrapped ${e}*/\n${t}`,i=Object.getOwnPropertyDescriptor(Function.prototype,"toString"),c=Object.getOwnPropertyDescriptor(Function.prototype.toString,"name");return e=(e,t,{ignoreNonConfigurable:n=!1}={})=>{const{name:p}=e;for(const o of Reflect.ownKeys(t))r(e,t,o,n);return((e,t)=>{const r=Object.getPrototypeOf(t);r!==Object.getPrototypeOf(e)&&Object.setPrototypeOf(e,r)})(e,t),((e,t,r)=>{const n=""===r?"":`with ${r.trim()}() `,p=o.bind(null,n,t.toString());Object.defineProperty(p,"name",c),Object.defineProperty(e,"toString",{...i,value:p})})(e,t,p),e}}export{r};

@@ -1,17 +1,15 @@
 {
-  "private": true,
-  "type": "module",
-  "scripts": {
-    "client": "cd client && npm start",
-    "server:dev": "cd server && php artisan serve",
-    "server": "cd server && php artisan serve",
-    "dev": "concurrently \"npm run client\" \"npm run server:dev\"",
-    "start": "concurrently \"npm run client\" \"npm run server\"",
-    "install": "concurrently \"npm run client:install\" \"npm run server:install\"",
-    "client:install": "cd client && npm install",
-    "server:install": "cd server && composer install"
-  },
-  "dependencies": {
-    "concurrently": "^9.1.2"
-  }
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "build": "vite build",
+        "start": "vite"
+    },
+    "devDependencies": {
+        "axios": "^1.8.2",
+        "concurrently": "^9.0.1",
+        "laravel-vite-plugin": "^1.2.0",
+        "tailwindcss": "^4.0.0",
+        "vite": "^6.2.4"
+    }
 }
