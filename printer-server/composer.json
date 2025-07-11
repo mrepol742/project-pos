@@ -1,0 +1,33 @@
+{
+  "$schema": "https://getcomposer.org/schema.json",
+  "name": "mrepol742/project-pos-printer-server",
+  "version": "1.0.0",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Melvin Jones Repol"
+    }
+  ],
+  "minimum-stability": "stable",
+  "prefer-stable": true,
+  "require": {
+    "php": "^8.2",
+    "mike42/escpos-php": "^2.2",
+    "vlucas/phpdotenv": "^5.6",
+    "cboden/ratchet": "^0.4.4",
+    "symfony/process": "^7.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "PrintServer\\": "src/"
+    }
+  },
+  "scripts": {
+    "start": [
+      "Composer\\Config::disableProcessTimeout",
+      "php ./src/index.php"
+    ],
+    "test": "node ./test/print.js"
+  }
+}
