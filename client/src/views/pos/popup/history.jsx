@@ -94,7 +94,9 @@ const History = ({ data }) => {
                                                 {timeAgo(sale.created_at)}
                                             </CTableDataCell>
                                             <CTableDataCell>
-                                                <CButton color="primary" size="sm">Print</CButton>
+                                                <CButton color="primary" size="sm">
+                                                    Print
+                                                </CButton>
                                             </CTableDataCell>
                                         </CTableRow>
                                     ))}

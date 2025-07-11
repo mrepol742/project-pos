@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 
 export const SalesHistory = () => {
     return (
@@ -7,5 +7,5 @@ export const SalesHistory = () => {
             <p>This section will display the sales history.</p>
             {/* Additional components or logic can be added here */}
         </div>
-    );
+    )
 }

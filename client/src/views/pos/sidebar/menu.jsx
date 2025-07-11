@@ -110,6 +110,8 @@ Menu.propTypes = {
     data: PropTypes.shape({
         showMenu: PropTypes.bool.isRequired,
         setShowMenu: PropTypes.func.isRequired,
+        popupMenu: PropTypes.string.isRequired,
+        setPopupMenu: PropTypes.func.isRequired,
         showPopupMenu: PropTypes.bool.isRequired,
         setShowPopupMenu: PropTypes.func.isRequired,
     }).isRequired,

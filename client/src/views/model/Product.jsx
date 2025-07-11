@@ -13,7 +13,7 @@ import {
 import { Helmet } from 'react-helmet'
 import { toast } from 'react-toastify'
 
-const Product = ({ params }) => {
+const Product = () => {
     const [categories, setCategories] = useState([])
     const [product, setProduct] = useState({
         name: '',

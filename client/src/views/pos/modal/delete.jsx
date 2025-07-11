@@ -22,7 +22,9 @@ const DeleteConfirmation = ({ data }) => {
         } else {
             setProducts((prevProducts) =>
                 prevProducts.map((product) =>
-                    selectedProduct.includes(product.date) ? { ...product, deleted: true } : product,
+                    selectedProduct.includes(product.date)
+                        ? { ...product, deleted: true }
+                        : product,
                 ),
             )
         }
