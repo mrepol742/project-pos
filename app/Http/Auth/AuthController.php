@@ -19,7 +19,7 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'username' => 'required|string|exists:users,username',
+            'username' => 'required|string|exists:users,username,status,active',
             'password' => 'required|string|min:6',
         ]);
 
@@ -51,7 +51,7 @@ class AuthController extends Controller
     {
         $sessionId = $request->input('session_id');
 
-        if (Session::getId() === $sessionId && Auth::check()) {
+        if (Session::getId() === $sessionId && Auth::check() && Auth::user()->status === 'active') {
             return response()->json([
                 'message' => 'Session is active',
                 'user' => Auth::user()

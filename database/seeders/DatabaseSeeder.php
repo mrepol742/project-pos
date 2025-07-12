@@ -12,6 +12,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        $debugEnabled = config('app.debug');
+        if ($debugEnabled) return;
+
         $roles = [
             'cashier',
             'admin',
@@ -38,18 +41,31 @@ class DatabaseSeeder extends Seeder
             'Gardening',
             'Pet Supplies',
         ];
+        $users = [
+            [
+                'email' => "cashier@example.com",
+                'role' => "cashier",
+            ],
+            [
+                'email' => "admin@example.com",
+                'role' => "admin",
+            ],
+            [
+                'email' => "super_admin@example.com",
+                'role' => "super_admin",
+            ],
+        ];
 
-        // User seeder
-        for ($i = 0; $i < 30; $i++) {
+        foreach ($users as $user) {
             \App\Models\User::factory()->create([
                 'name' => fake()->name(),
-                'email' => fake()->unique()->safeEmail(),
+                'email' => $user['email'],
                 'phone' => fake()->phoneNumber(),
                 'address' => fake()->address(),
-                'username' => fake()->userName(),
-                'role' => $roles[array_rand($roles)],
-                'status' => fake()->randomElement(['active', 'inactive']),
-                'password' => bcrypt('password'),
+                'username' => $user['role'],
+                'role' => $user['role'],
+                'status' => 'active',
+                'password' => bcrypt($user['role']),
             ]);
         }
 
