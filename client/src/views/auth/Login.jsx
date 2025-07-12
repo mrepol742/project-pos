@@ -42,7 +42,9 @@ const Login = () => {
                 cookies.set('session_id', response.data.session_token, {
                     expires: 1,
                 })
-                window.location.href = '/'
+                setTimeout(() => {
+                    window.location.href = '/'
+                }, 1000)
             })
             .catch((error) => toast.error('Invalid username or password'))
     }

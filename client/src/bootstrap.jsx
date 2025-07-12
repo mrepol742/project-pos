@@ -30,7 +30,10 @@ axiosInstance.interceptors.response.use(
         return response
     },
     (error) => {
-        if (error.response?.status === 401 && !excludedPaths.includes(window.location.pathname)) {
+        if (
+            [401, 403].includes(error.response?.status) &&
+            !excludedPaths.includes(window.location.pathname)
+        ) {
             cookies.remove('session_id')
             window.location.href = '/login'
         }

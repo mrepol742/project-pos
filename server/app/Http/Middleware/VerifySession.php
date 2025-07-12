@@ -19,9 +19,8 @@ class VerifySession
         if (Auth::check()) {
             $user = Auth::user();
 
-            if (empty($roles) || in_array($user->role, $roles)) {
+            if (!empty($roles) && in_array($user->role, $roles) && $user->status === 'active')
                 return $next($request);
-            }
 
             return response()->json(['message' => 'Forbidden'], 403);
         }
