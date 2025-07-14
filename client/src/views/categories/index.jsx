@@ -23,6 +23,7 @@ const Categories = () => {
     const [currentPage, setCurrentPage] = useState(1)
     const [totalPages, setTotalPages] = useState(0)
     const [showAppModal, setShowAppModal] = useState(false)
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
         fetchCategories(currentPage)
@@ -41,6 +42,9 @@ const Categories = () => {
             setCurrentPage(response.data.currentPage)
         } catch (error) {
             console.error('Error fetching Users:', error)
+            toast.error('Failed to fetch categories list')
+        } finally {
+            setLoading(false)
         }
     }
 
@@ -65,11 +69,19 @@ const Categories = () => {
             >
                 <Category />
             </AppModal>
-            {categories.length === 0 ? (
+            {loading && (
                 <div className="d-flex justify-content-center align-items-center">
-                    <h3>Loading Categories...</h3>
+                    <h3>Loading categories...</h3>
                 </div>
-            ) : (
+            )}
+
+            {categories.length == 0 && (
+                <div className="d-flex justify-content-center align-items-center">
+                    <h3>No categories yet</h3>
+                </div>
+            )}
+
+            {categories.length > 0 && (
                 <>
                     <CTable striped bordered hover responsive>
                         <CTableHead>

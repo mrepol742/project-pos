@@ -28,6 +28,7 @@ const Products = () => {
     const [showAppModal, setShowAppModal] = useState(false)
     const [showImportModal, setShowImportModal] = useState(false)
     const [showExportModal, setShowExportModal] = useState(false)
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
         fetchProducts(currentPage)
@@ -47,6 +48,9 @@ const Products = () => {
             setItemCount(response.data.itemCount)
         } catch (error) {
             console.error('Error fetching Products:', error)
+            toast.error('Failed to fetch products list')
+        } finally {
+            setLoading(false)
         }
     }
 
@@ -94,11 +98,19 @@ const Products = () => {
                     </CButton>
                 </div>
             </div>
-            {products.length === 0 ? (
+            {loading && (
                 <div className="d-flex justify-content-center align-items-center">
                     <h3>Loading products...</h3>
                 </div>
-            ) : (
+            )}
+
+            {products.length == 0 && (
+                <div className="d-flex justify-content-center align-items-center">
+                    <h3>No products yet</h3>
+                </div>
+            )}
+
+            {products.length > 0 && (
                 <>
                     <CTable striped bordered hover responsive>
                         <CTableHead>

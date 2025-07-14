@@ -20,8 +20,8 @@ const Product = () => {
         code: '',
         barcode: '',
         unit_measurement: '',
-        category: '',
-        active: true,
+        category_id: 0,
+        is_active: true,
         default_quantity: true,
         age_restriction: 0,
         description: '',
@@ -53,7 +53,7 @@ const Product = () => {
         const { id, value } = e.target
         setProduct((prevProduct) => ({
             ...prevProduct,
-            [id]: value,
+            [id]: id === 'category_id' ? parseInt(value) : value,
         }))
     }
 
@@ -63,14 +63,14 @@ const Product = () => {
             .post('/products', product)
             .then((response) => {
                 if (response.data.error) return toast.error(response.data.error)
-                toast.success('Product created successfully')
+                toast.success(`${product.name} created successfully`)
                 setProduct({
                     name: '',
                     code: '',
                     barcode: '',
                     unit_measurement: '',
-                    category: '',
-                    active: true,
+                    category_id: 0,
+                    is_active: true,
                     default_quantity: true,
                     age_restriction: 0,
                     description: '',
@@ -83,7 +83,8 @@ const Product = () => {
                 })
             })
             .catch((error) => {
-                console.error('Error adding product:', error)
+                console.error('Error creating product:', error)
+                toast.error(`Failed to create product ${product.name}`)
             })
     }
 
@@ -180,7 +181,6 @@ const Product = () => {
                         floatingLabel="Category"
                         onChange={handleSelectChange}
                         options={[
-                            { label: 'Select a category', value: '' },
                             ...categories.map((g) => ({
                                 label: g.name,
                                 value: g.id,

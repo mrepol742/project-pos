@@ -56,7 +56,7 @@ const AppHeaderDropdown = () => {
                     My Account
                 </CDropdownItem>
                 <CDropdownDivider />
-                <CDropdownItem onClick={() => navigate('/logout')}>
+                <CDropdownItem onClick={() => navigate('/logout', { replace: true })}>
                     <FontAwesomeIcon icon={faArrowRightFromBracket} className="me-2" />
                     Logout
                 </CDropdownItem>

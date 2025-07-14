@@ -41,7 +41,7 @@ const AppAuth = () => {
             </div>
         )
 
-    if (!isAuth) return <Navigate to={loc} />
+    if (!isAuth) return <Navigate to={loc} replace />
     return <Outlet />
 }
 

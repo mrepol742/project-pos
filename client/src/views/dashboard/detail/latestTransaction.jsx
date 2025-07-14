@@ -8,16 +8,22 @@ import {
     CTableHeaderCell,
     CTableRow,
 } from '@coreui/react'
+import { toast } from 'react-toastify'
 import timeAgo from '../../../utils/timeAgo'
 
 export const LatestTransaction = () => {
     const [latestTransactions, setLatestTransactions] = useState([])
 
     const fetchLatestTransactions = async () => {
-        axios.get('/dashboard/latest-transactions').then((response) => {
-            if (response.data.error) return toast.error(response.data.error)
-            setLatestTransactions(response.data)
-        })
+        try {
+            axios.get('/dashboard/latest-transactions').then((response) => {
+                if (response.data.error) return toast.error(response.data.error)
+                setLatestTransactions(response.data)
+            })
+        } catch (error) {
+            console.error('Error fetching Latest transactions:', error)
+            toast.error('Failed to fetch latest transactions')
+        }
     }
 
     useEffect(() => {

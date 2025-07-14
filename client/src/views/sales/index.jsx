@@ -9,6 +9,7 @@ import {
     CTableHeaderCell,
     CTableRow,
 } from '@coreui/react'
+import { toast } from 'react-toastify'
 import AppPagination from '../../components/AppPagination'
 import timeAgo from '../../utils/timeAgo'
 
@@ -17,6 +18,7 @@ const Sales = () => {
     const [currentPage, setCurrentPage] = useState(1)
     const [totalPages, setTotalPages] = useState(0)
     const [itemCount, setItemCount] = useState(0)
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
         fetchSales(currentPage)
@@ -36,6 +38,9 @@ const Sales = () => {
             setItemCount(response.data.itemCount)
         } catch (error) {
             console.error('Error fetching Products:', error)
+            toast.error('Failed to fetch sales list')
+        } finally {
+            setLoading(false)
         }
     }
 
@@ -51,11 +56,19 @@ const Sales = () => {
                 </div>
                 <div></div>
             </div>
-            {sales.length === 0 ? (
+            {loading && (
                 <div className="d-flex justify-content-center align-items-center">
                     <h3>Loading sales...</h3>
                 </div>
-            ) : (
+            )}
+
+            {sales.length == 0 && (
+                <div className="d-flex justify-content-center align-items-center">
+                    <h3>No sales yet</h3>
+                </div>
+            )}
+
+            {sales.length > 0 && (
                 <>
                     <CTable striped bordered hover responsive>
                         <CTableHead>

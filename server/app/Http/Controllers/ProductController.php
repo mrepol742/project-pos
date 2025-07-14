@@ -50,20 +50,22 @@ class ProductController extends Controller
     public function createProduct(Request $request)
     {
         try {
+
+            info('Creating product with data: ' . json_encode($request->all()));
             $request->validate([
                 'name' => 'required|string|max:255',
                 'code' => 'required|string|max:255',
                 'barcode' => 'nullable|string|max:255',
                 'unit_measurement' => 'required|string|max:255',
-                'is_active' => 'required|boolean',
+                'is_active' => 'sometimes|boolean',
                 'default_quantity' => 'required|boolean',
-                'group_id' => 'nullable|exists:groups,id',
+                'category_id' => 'required|integer|exists:categories,id',
                 'age_restriction' => 'nullable|integer|min:0',
                 'description' => 'nullable|string',
                 'taxes' => 'nullable|integer|min:0',
-                'cost_price' => 'required|numeric|min:0',
-                'markup' => 'required|numeric|min:0',
-                'sale_price' => 'required|numeric|min:0',
+                'cost_price' => 'required|integer|min:0',
+                'markup' => 'required|integer|min:0',
+                'sale_price' => 'required|integer|min:0',
                 'color' => 'nullable|string|max:255',
                 'image' => 'nullable|image|max:2048', // 2MB Max
             ]);
@@ -72,6 +74,17 @@ class ProductController extends Controller
                 $request->merge(['quantity' => 0]);
             } else {
                 $request->merge(['quantity' => $request->input('quantity', 0)]);
+            }
+
+            if (is_null($request->barcode)) {
+                $lastProduct = Product::orderBy('id', 'desc')->first();
+                if ($lastProduct && $lastProduct->barcode) {
+                    $lastBarcode = ltrim($lastProduct->barcode, '0');
+                    $nextBarcode = str_pad((int)$lastBarcode + 1, 9, '0', STR_PAD_LEFT);
+                } else {
+                    $nextBarcode = '0000000000001';
+                }
+                $request->merge(['barcode' => $nextBarcode]);
             }
 
             $product = Product::create($request->all());

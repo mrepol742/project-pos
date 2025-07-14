@@ -22,7 +22,11 @@ const Logout = () => {
         window.location.href = '/'
     }, [])
 
-    return <>Loading..</>
+    return (
+        <div className="d-flex justify-content-center align-items-center">
+            <h3>Logging you out...</h3>
+        </div>
+    )
 }
 
 export default Logout

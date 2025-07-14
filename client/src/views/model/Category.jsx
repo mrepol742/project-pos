@@ -30,17 +30,18 @@ const NewCategory = () => {
     const handleSubmit = (e) => {
         e.preventDefault()
         axios
-            .post('/groups', category)
+            .post('/categories', category)
             .then((response) => {
                 if (response.data.error) return toast.error(response.data.error)
-                toast.success('Category created successfully')
+                toast.success(`${category.name} created successfully`)
                 setCategory({
                     name: '',
                     description: '',
                 })
             })
             .catch((error) => {
-                console.error('Error adding category:', error)
+                console.error('Error creating category:', error)
+                toast.error(`Failed to create category ${category.name}`)
             })
     }
 
@@ -64,7 +65,6 @@ const NewCategory = () => {
                 floatingLabel="Name"
                 onChange={handleChange}
                 placeholder=""
-                required
             />
             <CFormInput
                 type="text"
@@ -73,7 +73,6 @@ const NewCategory = () => {
                 floatingLabel="Description"
                 onChange={handleChange}
                 placeholder=""
-                required
             />
         </CForm>
     )

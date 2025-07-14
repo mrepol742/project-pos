@@ -12,6 +12,7 @@ import {
     CRow,
     CCol,
 } from '@coreui/react'
+import { toast } from 'react-toastify'
 import User from '../model/User'
 import AppPagination from '../../components/AppPagination'
 import AppModal from '../../components/AppModal'
@@ -23,6 +24,7 @@ const Users = () => {
     const [totalPages, setTotalPages] = useState(0)
     const [itemCount, setItemCount] = useState(0)
     const [showAppModal, setShowAppModal] = useState(false)
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
         fetchUsers(currentPage)
@@ -42,6 +44,9 @@ const Users = () => {
             setItemCount(response.data.itemCount)
         } catch (error) {
             console.error('Error fetching Users:', error)
+            toast.error('Failed to fetch users list')
+        } finally {
+            setLoading(false)
         }
     }
 
@@ -81,11 +86,19 @@ const Users = () => {
                     </CButton>
                 </div>
             </div>
-            {users.length === 0 ? (
+            {loading && (
                 <div className="d-flex justify-content-center align-items-center">
                     <h3>Loading users...</h3>
                 </div>
-            ) : (
+            )}
+
+            {users.length == 0 && (
+                <div className="d-flex justify-content-center align-items-center">
+                    <h3>No users yet</h3>
+                </div>
+            )}
+
+            {users.length > 0 && (
                 <>
                     <CTable striped bordered hover responsive>
                         <CTableHead>

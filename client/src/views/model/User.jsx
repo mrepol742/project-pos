@@ -11,6 +11,7 @@ import {
     CFormSelect,
 } from '@coreui/react'
 import { Helmet } from 'react-helmet'
+import { toast } from 'react-toastify'
 
 const NewUser = () => {
     const [roles, setRoles] = useState([])
@@ -47,7 +48,7 @@ const NewUser = () => {
             .post('/users', user)
             .then((response) => {
                 if (response.data.error) return toast.error(response.data.error)
-                toast.success('User created successfully')
+                toast.success(`${user.name} created successfully`)
                 setUser({
                     name: '',
                     email: '',
@@ -60,7 +61,8 @@ const NewUser = () => {
                 })
             })
             .catch((error) => {
-                console.error('Error adding product:', error)
+                console.error('Error creating user:', error)
+                toast.error(`Failed to create user ${user.name}`)
             })
     }
 
