@@ -13,7 +13,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $debugEnabled = config('app.debug');
-        if ($debugEnabled) return;
+        if (!$debugEnabled) return;
 
         $roles = [
             'cashier',
@@ -64,7 +64,6 @@ class DatabaseSeeder extends Seeder
                 'address' => fake()->address(),
                 'username' => $user['role'],
                 'role' => $user['role'],
-                'status' => 'active',
                 'password' => bcrypt($user['role']),
             ]);
         }

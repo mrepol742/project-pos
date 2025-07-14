@@ -23,7 +23,7 @@ class Product extends Model
         'unit_measurement',
         'is_active',
         'quantity',
-        'group_id',
+        'category_id',
         'age_restriction',
         'description',
         'taxes',
