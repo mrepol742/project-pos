@@ -19,7 +19,7 @@ import { toast } from 'react-toastify'
 
 const Login = () => {
     const [formData, setFormData] = useState({
-        username: '',
+        login: '',
         password: '',
     })
     const [loading, setLoading] = useState(false)
@@ -205,11 +205,10 @@ const Login = () => {
                                         <CFormInput
                                             className="border-0"
                                             onChange={handleChange}
-                                            value={formData.username}
+                                            value={formData.login}
                                             type="text"
-                                            name="username"
-                                            placeholder="Username"
-                                            autoComplete="username"
+                                            name="login"
+                                            placeholder="Username or Email"
                                         />
                                     </CInputGroup>
                                     <CInputGroup className="mb-4">
@@ -223,7 +222,6 @@ const Login = () => {
                                             name="password"
                                             type="password"
                                             placeholder="Password"
-                                            autoComplete="current-password"
                                         />
                                     </CInputGroup>
                                     <CRow>

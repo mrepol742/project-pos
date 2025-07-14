@@ -19,20 +19,29 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'username' => 'required|string|exists:users,username,status,active',
-            'password' => 'required|string|min:6',
+            'login' => 'required|string|max:255',
+            'password' => 'required|string|max:255',
         ]);
 
-        if ($validator->fails())
+        if ($validator->fails()) {
             return response()->json([
-                'error' => $validator->errors()->first()
+            'error' => $validator->errors()->first()
             ], 200);
+        }
 
-        if (Auth::attempt($request->only('username', 'password'))) {
+        $login = $request->input('login');
+        $password = $request->input('password');
+
+        $user = \App\Models\User::where('username', $login)
+            ->orWhere('email', $login)
+            ->orWhere('phone', $login)
+            ->first();
+
+        if ($user && Auth::attempt(['username' => $user->username, 'password' => $password])) {
             $request->session()->regenerate();
             return response()->json([
-                'message' => 'Login successful',
-                'session_token' => $request->session()->getId(),
+            'message' => 'Login successful',
+            'session_token' => $request->session()->getId(),
             ], 200);
         }
 
