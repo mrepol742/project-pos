@@ -1,7 +1,5 @@
-# Project POS
-
-[![Build CI](https://github.com/mrepol742/project-pos/actions/workflows/build.yml/badge.svg)](https://github.com/mrepol742/project-pos/actions/workflows/build.yml)
-[![Dependabot Updates](https://github.com/mrepol742/project-pos/actions/workflows/dependabot/dependabot-updates/badge.svg)](https://github.com/mrepol742/project-pos/actions/workflows/dependabot/dependabot-updates)
+# Project POS [![Build CI](https://github.com/mrepol742/project-pos/actions/workflows/build.yml/badge.svg)](https://github.com/mrepol742/project-pos/actions/workflows/build.yml)
+A lightweight, web-based and offline-capable POS system built for flawless performance, supporting multi-department roles and full functionality.
 
 ## Pre-requisites
 
