@@ -162,6 +162,8 @@ const Login = () => {
         update()
     }, [])
 
+    const [showPassword, setShowPassword] = useState(false)
+
     return (
         <div
             className="bg-body-tertiary min-vh-100 d-flex flex-row align-items-center"
@@ -220,9 +222,24 @@ const Login = () => {
                                             className="border-0"
                                             value={formData.password}
                                             name="password"
-                                            type="password"
+                                            type={showPassword ? 'text' : 'password'}
                                             placeholder="Password"
                                         />
+                                        <CInputGroupText
+                                            className="border-0 rounded"
+                                            style={{ cursor: 'pointer' }}
+                                            onClick={() => setShowPassword((prev) => !prev)}
+                                        >
+                                            {showPassword ? (
+                                                <span role="img" aria-label="Hide password">
+                                                    🙈
+                                                </span>
+                                            ) : (
+                                                <span role="img" aria-label="Show password">
+                                                    👁️
+                                                </span>
+                                            )}
+                                        </CInputGroupText>
                                     </CInputGroup>
                                     <CRow>
                                         <CCol xs={6}>
