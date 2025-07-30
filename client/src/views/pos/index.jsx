@@ -145,6 +145,10 @@ const PointOfSale = () => {
                 action: handleDelete,
             },
             {
+                condition: event.key === 'F5',
+                action: handleNewSale,
+            },
+            {
                 condition: event.ctrlKey && event.key.toLowerCase() === 'h',
                 action: () => setShowHelpModal(true),
             },
@@ -611,41 +615,6 @@ const PointOfSale = () => {
                             )}
                         </CTable>
                     </div>
-                    <div className="bg-body-secondary p-3 m-3 rounded mt-auto">
-                        <div className="d-flex justify-content-between">
-                            <span>Subtotal:</span>
-                            <span>
-                                {getSubTotal().toLocaleString('en-PH', {
-                                    minimumFractionDigits: 2,
-                                    maximumFractionDigits: 2,
-                                })}
-                            </span>
-                        </div>
-                        {discount > 0 && (
-                            <div className="d-flex justify-content-between">
-                                <span>Discount:</span>
-                                <span>{discount}%</span>
-                            </div>
-                        )}
-                        <div className="d-flex justify-content-between  border-bottom border-secondary pb-2">
-                            <span>Tax:</span>
-                            <span>
-                                {getTotalTaxes().toLocaleString('en-PH', {
-                                    minimumFractionDigits: 2,
-                                    maximumFractionDigits: 2,
-                                })}
-                            </span>
-                        </div>
-                        <div className="d-flex justify-content-between pt-2">
-                            <strong>Total:</strong>
-                            <strong>
-                                {getTotal().toLocaleString('en-PH', {
-                                    minimumFractionDigits: 2,
-                                    maximumFractionDigits: 2,
-                                })}
-                            </strong>
-                        </div>
-                    </div>
                 </CCol>
                 <CCol
                     lg={5}
@@ -665,10 +634,14 @@ const PointOfSale = () => {
                                 selectedProduct,
                                 showMenu,
                                 setShowMenu,
+                                discount,
                                 getDiscount,
                                 paymentMethod,
                                 setPaymentMethod,
                                 setShowCalendarModal,
+                                getSubTotal,
+                                getTotalTaxes,
+                                getTotal,
                             }}
                         />
                     ) : (

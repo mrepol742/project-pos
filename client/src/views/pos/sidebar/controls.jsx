@@ -19,6 +19,7 @@ import {
     faLock,
     faLockOpen,
     faBars,
+    faUser,
 } from '@fortawesome/free-solid-svg-icons'
 import CIcon from '@coreui/icons-react'
 import {
@@ -44,10 +45,14 @@ const Controls = ({ data }) => {
         selectedProduct,
         showMenu,
         setShowMenu,
+        discount,
         getDiscount,
         paymentMethod,
         setPaymentMethod,
         setShowCalendarModal,
+        getSubTotal,
+        getTotalTaxes,
+        getTotal,
     } = data
     const [isFullScreen, setIsFullScreen] = useState(false)
     const [currentTime, setCurrentTime] = useState(new Date())
@@ -87,7 +92,7 @@ const Controls = ({ data }) => {
     return (
         <>
             <div className="flex-grow-1 text-uppercase" data-aos="fade-in">
-                <div className="d-flex justify-content-between align-items-center mt-2 p-2 text-center">
+                <div className="d-flex justify-content-between align-items-center p-2 text-center">
                     <div onClick={() => setShowCalendarModal(true)}>
                         <FontAwesomeIcon icon={faClock} className="me-1" />
                         {currentTime.toLocaleString('en-PH', {
@@ -141,8 +146,15 @@ const Controls = ({ data }) => {
                                 </CDropdownItem>
                             </CDropdownMenu>
                         </CDropdown>
+
                         <FontAwesomeIcon
-                            className="ms-2"
+                            icon={faUser}
+                            onClick={() => setShowMenu(!showMenu)}
+                            style={{ cursor: 'pointer' }}
+                        />
+
+                        <FontAwesomeIcon
+                            className="ms-3"
                             icon={isFullScreen ? faMinimize : faExpand}
                             onClick={handleFullScreen}
                             style={{ cursor: 'pointer' }}
@@ -156,11 +168,7 @@ const Controls = ({ data }) => {
                         onClick={(e) => handleDelete('del')}
                         style={{ flex: 1 }}
                     >
-                        <FontAwesomeIcon
-                            icon={faClose}
-                            className="mb-2"
-                            style={{ width: '30px', height: '50px' }}
-                        />
+                        <span className="fs-2">DEL</span>
                         Cancel
                     </div>
                     <div
@@ -168,11 +176,7 @@ const Controls = ({ data }) => {
                         onClick={handleQuantity}
                         style={{ flex: 1 }}
                     >
-                        <FontAwesomeIcon
-                            icon={faCartPlus}
-                            className="mb-2"
-                            style={{ width: '30px', height: '50px' }}
-                        />
+                        <span className="fs-2">F4</span>
                         Quantity
                     </div>
                     <div
@@ -180,71 +184,17 @@ const Controls = ({ data }) => {
                         onClick={handleNewSale}
                         style={{ flex: 1 }}
                     >
-                        <FontAwesomeIcon
-                            icon={faAdd}
-                            className="mb-2"
-                            style={{ width: '30px', height: '50px' }}
-                        />
+                        <span className="fs-2">F5</span>
                         New Sale
                     </div>
                 </div>
-                <small className="ms-1">Payments</small>
-                <div className="d-flex justify-content-between align-items-center text-center">
-                    <div
-                        className={`rounded py-2 m-1 d-flex flex-column align-items-center border border-2 ${paymentMethod === 'cash' ? 'bg-primary border-primary' : 'border-body-secondary'}`}
-                        onClick={() => setPaymentMethod('cash')}
-                        style={{ flex: 1 }}
-                    >
-                        Cash
-                    </div>
-                    <div
-                        className={`rounded py-2 m-1 d-flex flex-column align-items-center border border-2 ${paymentMethod === 'credit' ? 'bg-primary border-primary' : 'border-secondary'}  bg-body-secondary`}
-                        style={{ flex: 1 }}
-                    >
-                        Credit Card
-                    </div>
-                    <div
-                        className={`rounded py-2 m-1 d-flex flex-column align-items-center border border-2 ${paymentMethod === 'debit' ? 'bg-primary border-primary' : 'border-secondary'}  bg-body-secondary`}
-                        style={{ flex: 1 }}
-                    >
-                        Debit Card
-                    </div>
-                </div>
-                <div className="d-flex justify-content-between align-items-center mb-3 text-center">
-                    <div
-                        className={`rounded py-2 m-1 d-flex flex-column align-items-center border border-2 ${paymentMethod === 'check' ? 'bg-primary border-primary' : 'border-secondary'}  bg-body-secondary`}
-                        style={{ flex: 1 }}
-                    >
-                        Check
-                    </div>
-                    <div
-                        className="rounded py-2 m-1 d-flex flex-column align-items-center border border-2 border-secondary bg-body-secondary"
-                        style={{ flex: 1 }}
-                    >
-                        Gift Card
-                    </div>
-                    <div
-                        className="rounded py-2 m-1 d-flex flex-column align-items-center border border-2 border-secondary bg-body-secondary"
-                        style={{ flex: 1 }}
-                    >
-                        Voucher
-                    </div>
-                </div>
-                {selectedProduct.length > 0 && (
-                    <div className="ms-1">{selectedProduct.length} Items selected</div>
-                )}
-            </div>
-            <div className="mt-auto text-uppercase" data-aos="fade-in">
                 <div className="d-flex justify-content-between align-items-center text-center">
                     <div
                         className={`rounded py-3 m-1 d-flex flex-column align-items-center border border-2 ${getDiscount() > 0 ? 'bg-primary border-primary' : 'border-secondary'}`}
                         onClick={handleDiscount}
                         style={{ flex: 1 }}
                     >
-                        <FontAwesomeIcon
-                            icon={faPercent}
-                            style={{ width: '30px', height: '50px' }}
-                        />{' '}
+                        <span className="fs-2">F2</span>
                         Discount
                     </div>
                     <div
@@ -287,12 +237,45 @@ const Controls = ({ data }) => {
                     >
                         Void
                     </div>
-                    <div
-                        className="rounded py-3 m-1 d-flex flex-column align-items-center border border-2 border-secondary"
-                        onClick={() => setShowMenu(!showMenu)}
-                        style={{ flex: 1 }}
-                    >
-                        <FontAwesomeIcon icon={faBars} style={{ width: '25px', height: '25px' }} />
+                </div>
+                {selectedProduct.length > 0 && (
+                    <div className="ms-1">{selectedProduct.length} Items selected</div>
+                )}
+            </div>
+            <div className="mt-auto text-uppercase" data-aos="fade-in">
+                <div className="bg-body-secondary p-3 my-3 rounded mt-auto">
+                    <div className="d-flex justify-content-between">
+                        <span>Subtotal:</span>
+                        <span>
+                            {getSubTotal().toLocaleString('en-PH', {
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2,
+                            })}
+                        </span>
+                    </div>
+                    {discount > 0 && (
+                        <div className="d-flex justify-content-between">
+                            <span>Discount:</span>
+                            <span>{discount}%</span>
+                        </div>
+                    )}
+                    <div className="d-flex justify-content-between  border-bottom border-secondary pb-2">
+                        <span>Tax:</span>
+                        <span>
+                            {getTotalTaxes().toLocaleString('en-PH', {
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2,
+                            })}
+                        </span>
+                    </div>
+                    <div className="d-flex justify-content-between pt-2">
+                        <strong>Total:</strong>
+                        <strong>
+                            {getTotal().toLocaleString('en-PH', {
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2,
+                            })}
+                        </strong>
                     </div>
                 </div>
             </div>
@@ -314,9 +297,13 @@ Controls.propTypes = {
         selectedProduct: PropTypes.array.isRequired,
         showMenu: PropTypes.bool.isRequired,
         setShowMenu: PropTypes.func.isRequired,
+        discount: PropTypes.number.isRequired,
         getDiscount: PropTypes.func.isRequired,
         paymentMethod: PropTypes.string.isRequired,
         setPaymentMethod: PropTypes.func.isRequired,
         setShowCalendarModal: PropTypes.func.isRequired,
+        getSubTotal: PropTypes.func.isRequired,
+        getTotalTaxes: PropTypes.func.isRequired,
+        getTotal: PropTypes.func.isRequired,
     }).isRequired,
 }
