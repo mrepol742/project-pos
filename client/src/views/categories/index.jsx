@@ -75,7 +75,7 @@ const Categories = () => {
                 </div>
             )}
 
-            {categories.length == 0 && (
+            {categories.length == 0 && !loading && (
                 <div className="d-flex justify-content-center align-items-center">
                     <h3>No categories yet</h3>
                 </div>

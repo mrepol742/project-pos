@@ -104,7 +104,7 @@ const Products = () => {
                 </div>
             )}
 
-            {products.length == 0 && (
+            {products.length == 0 && !loading && (
                 <div className="d-flex justify-content-center align-items-center">
                     <h3>No products yet</h3>
                 </div>

@@ -92,7 +92,7 @@ const Users = () => {
                 </div>
             )}
 
-            {users.length == 0 && (
+            {users.length == 0 && !loading && (
                 <div className="d-flex justify-content-center align-items-center">
                     <h3>No users yet</h3>
                 </div>

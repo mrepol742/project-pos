@@ -62,7 +62,7 @@ const Sales = () => {
                 </div>
             )}
 
-            {sales.length == 0 && (
+            {sales.length == 0 && !loading && (
                 <div className="d-flex justify-content-center align-items-center">
                     <h3>No sales yet</h3>
                 </div>
