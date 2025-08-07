@@ -12,6 +12,8 @@ import {
 } from '@coreui/react'
 import { Helmet } from 'react-helmet'
 import { toast } from 'react-toastify'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPlus } from '@fortawesome/free-solid-svg-icons'
 
 const Product = () => {
     const [categories, setCategories] = useState([])
@@ -120,16 +122,9 @@ const Product = () => {
 
     return (
         <CForm onSubmit={handleSubmit} className="p-2">
-            <div className="d-flex justify-content-between">
-                <h3 className="mb-3">New Product</h3>
-                <div>
-                    <CButton color="secondary" className="me-2" size="sm">
-                        Cancel
-                    </CButton>
-                    <CButton color="primary" size="sm" type="submit">
-                        Save
-                    </CButton>
-                </div>
+            <div className="d-flex align-items-center mb-3 fs-5">
+                <FontAwesomeIcon icon={faPlus} className="me-2" />
+                New Product
             </div>
             <h5>Details</h5>
             <CFormInput
@@ -279,9 +274,11 @@ const Product = () => {
                     accept="image/*"
                     className="mb-2"
                 />
-                <CButton color="secondary" className="me-2" size="sm" onClick={handleClearImage}>
-                    Clear
-                </CButton>
+                {product.image && (
+                    <CButton color="danger" className="me-2" size="sm" onClick={handleClearImage}>
+                        Clear Image
+                    </CButton>
+                )}
             </div>
             {product.image && (
                 <CImage
@@ -291,6 +288,14 @@ const Product = () => {
                     style={{ maxWidth: '150px', maxHeight: '150px' }}
                 />
             )}
+            <div className="d-flex justify-content-end mt-3">
+                <CButton color="secondary" className="me-2" size="sm">
+                    Cancel
+                </CButton>
+                <CButton color="primary" size="sm" type="submit">
+                    Add Product
+                </CButton>
+            </div>
         </CForm>
     )
 }

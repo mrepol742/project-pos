@@ -85,7 +85,7 @@ const NewUser = () => {
         <CForm onSubmit={handleSubmit} className="p-2">
             <div className="d-flex align-items-center mb-3 fs-5">
                 <FontAwesomeIcon icon={faPlus} className="me-2" />
-                Create New User
+                New User
             </div>
             <CRow>
                 <CCol xs={12} md={6}>
@@ -149,6 +149,7 @@ const NewUser = () => {
                                 value: d.name,
                             })),
                         ]}
+                        required
                     />
                 </CCol>
             </CRow>
@@ -164,6 +165,7 @@ const NewUser = () => {
                             { label: 'Active', value: 'active' },
                             { label: 'Inactive', value: 'inactive' },
                         ]}
+                        required
                     />
                 </CCol>
                 <CCol xs={12} md={6}>
@@ -183,7 +185,7 @@ const NewUser = () => {
                     Cancel
                 </CButton>
                 <CButton color="primary" size="sm" type="submit">
-                    Create User
+                    Add User
                 </CButton>
             </div>
         </CForm>
