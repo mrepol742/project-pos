@@ -34,19 +34,28 @@ const Login = () => {
 
     const handleLogin = async (e) => {
         e.preventDefault()
-        axios
-            .post('/auth/login', formData)
-            .then((response) => {
-                if (response.data.error) return toast.error(response.data.error)
-                toast.success('Login successful')
-                cookies.set('session_id', response.data.session_token, {
-                    expires: 1,
-                })
+        const response = new Promise(async (resolve, reject) => {
+            try {
+                const res = await axios.post('/auth/login', formData)
+                if (res.data.error) {
+                    toast.error(res.data.error)
+                    reject(res.data.error)
+                }
+                cookies.set('session_id', res.data.session_token, { expires: 1 })
                 setTimeout(() => {
                     window.location.href = '/'
                 }, 1000)
-            })
-            .catch((error) => toast.error('Invalid username or password'))
+                resolve(res.data)
+            } catch (error) {
+                reject(error)
+            }
+        })
+
+        toast.promise(response, {
+            pending: 'Logging in...',
+            success: 'Login successful',
+            error: 'Invalid username or password',
+        })
     }
 
     useEffect(() => {
@@ -194,7 +203,7 @@ const Login = () => {
             ></canvas>
             <CContainer style={{ position: 'relative', zIndex: 3 }}>
                 <CRow className="justify-content-center">
-                    <CCol md={8} lg={6} xl={4}>
+                    <CCol md={7} lg={5} xl={4}>
                         <CCard className="p-4 border-0">
                             <CCardBody>
                                 <CForm onSubmit={handleLogin}>
