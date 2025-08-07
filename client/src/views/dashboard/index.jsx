@@ -33,8 +33,8 @@ const Dashboard = () => {
             <Helmet>
                 <title>Dashboard - Project POS</title>
             </Helmet>
-            <CRow>
-                <CCol xs={12} md={2} className="mb-3">
+            <CRow xs={12} md={2}>
+                <CCol className="mb-3">
                     <CCard className="border-0">
                         <CCardBody>
                             <h6 className="text-center text-uppercase text-muted mb-4">Sales</h6>
@@ -42,7 +42,7 @@ const Dashboard = () => {
                         </CCardBody>
                     </CCard>
                 </CCol>
-                <CCol xs={12} md={2} className="mb-3">
+                <CCol className="mb-3">
                     <CCard className="border-0">
                         <CCardBody>
                             <h6 className="text-center text-uppercase text-muted mb-4">
@@ -52,7 +52,7 @@ const Dashboard = () => {
                         </CCardBody>
                     </CCard>
                 </CCol>
-                <CCol xs={12} md={2} className="mb-3">
+                <CCol className="mb-3">
                     <CCard className="border-0">
                         <CCardBody>
                             <h6 className="text-center text-uppercase text-muted mb-4">
@@ -62,7 +62,7 @@ const Dashboard = () => {
                         </CCardBody>
                     </CCard>
                 </CCol>
-                <CCol xs={12} md={3} className="mb-3">
+                <CCol className="mb-3">
                     <CCard className="border-0">
                         <CCardBody className="text-center">
                             <Total />

@@ -26,11 +26,15 @@ import {
     cilSun,
 } from '@coreui/icons'
 import AppHeaderDropdown from './AppHeaderDropdown'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faAdd, faBell, faMoon, faSun } from '@fortawesome/free-solid-svg-icons'
+import AppModal from './AppModal'
+import Product from '../views/model/Product'
 
 const AppHeader = () => {
     const headerRef = useRef()
     const { colorMode, setColorMode } = useColorModes('coreui-free-react-admin-template-theme')
-
+    const [showAppModal, setShowAppModal] = React.useState(false)
     const dispatch = useDispatch()
     const sidebarShow = useSelector((state) => state.sidebarShow)
 
@@ -45,45 +49,56 @@ const AppHeader = () => {
     }, [])
 
     return (
-        <CHeader position="sticky" className="mb-4 p-0" ref={headerRef}>
-            <CContainer className="border-bottom px-4" fluid>
-                <CHeaderToggler
-                    onClick={() => dispatch({ type: 'set', sidebarShow: !sidebarShow })}
-                    style={{ marginInlineStart: '-14px' }}
-                >
-                    <CIcon icon={cilMenu} size="lg" />
-                </CHeaderToggler>
-                <CHeaderNav className="ms-auto">
-                    <CNavItem>
-                        <CNavLink href="#">
-                            <CIcon icon={cilBell} size="lg" />
-                        </CNavLink>
-                    </CNavItem>
-                </CHeaderNav>
-                <CHeaderNav>
-                    {colorMode === 'dark' ? (
+        <>
+            <CHeader position="sticky" className="mb-4 p-0" ref={headerRef}>
+                <CContainer className="border-bottom px-4" fluid>
+                    <CHeaderToggler
+                        onClick={() => dispatch({ type: 'set', sidebarShow: !sidebarShow })}
+                        style={{ marginInlineStart: '-14px' }}
+                    >
+                        <CIcon icon={cilMenu} size="lg" />
+                    </CHeaderToggler>
+                    <CHeaderNav className="me-auto">
                         <CNavItem>
-                            <CNavLink href="#" onClick={() => setColorMode('light')}>
-                                <CIcon icon={cilMoon} size="lg" />
+                            <CNavLink href="#" onClick={() => setShowAppModal(true)}>
+                                <FontAwesomeIcon icon={faAdd} size="lg" />
                             </CNavLink>
                         </CNavItem>
-                    ) : (
+                    </CHeaderNav>
+                    <CHeaderNav className="ms-auto">
                         <CNavItem>
-                            <CNavLink href="#" onClick={() => setColorMode('dark')}>
-                                <CIcon icon={cilSun} size="lg" />
+                            <CNavLink href="#">
+                                <FontAwesomeIcon icon={faBell} size="lg" />
                             </CNavLink>
                         </CNavItem>
-                    )}
-
-                    <CNavItem className="d-block d-md-none">
-                        <CNavLink href="#">
-                            <CIcon icon={cilBell} size="lg" />
-                        </CNavLink>
-                    </CNavItem>
-                    <AppHeaderDropdown className="app-header-dropdown" />
-                </CHeaderNav>
-            </CContainer>
-        </CHeader>
+                    </CHeaderNav>
+                    <CHeaderNav>
+                        {colorMode === 'dark' ? (
+                            <CNavItem>
+                                <CNavLink href="#" onClick={() => setColorMode('light')}>
+                                    <FontAwesomeIcon icon={faMoon} size="lg" />
+                                </CNavLink>
+                            </CNavItem>
+                        ) : (
+                            <CNavItem>
+                                <CNavLink href="#" onClick={() => setColorMode('dark')}>
+                                    <FontAwesomeIcon icon={faSun} size="lg" />
+                                </CNavLink>
+                            </CNavItem>
+                        )}
+                        <AppHeaderDropdown className="app-header-dropdown" />
+                    </CHeaderNav>
+                </CContainer>
+            </CHeader>
+            <AppModal
+                data={{
+                    showAppModal,
+                    setShowAppModal,
+                }}
+            >
+                <Product />
+            </AppModal>
+        </>
     )
 }
 
