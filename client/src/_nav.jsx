@@ -14,7 +14,7 @@ const _nav = [
         component: CNavItem,
         name: 'Dashboard',
         to: '/',
-        icon: <FontAwesomeIcon icon={faChartSimple} className="me-2" />,
+        icon: <FontAwesomeIcon icon={faChartSimple} className="nav-icon" />,
     },
     {
         component: CNavTitle,
@@ -24,31 +24,31 @@ const _nav = [
         component: CNavItem,
         name: 'Products',
         to: '/products',
-        icon: <FontAwesomeIcon icon={faBox} className="me-2" />,
+        icon: <FontAwesomeIcon icon={faBox} className="nav-icon" />,
     },
     {
         component: CNavItem,
         name: 'Categories',
         to: '/categories',
-        icon: <FontAwesomeIcon icon={faBox} className="me-2" />,
+        icon: <FontAwesomeIcon icon={faBox} className="nav-icon" />,
     },
     {
         component: CNavItem,
         name: 'Sales',
         to: '/sales',
-        icon: <FontAwesomeIcon icon={faCartShopping} className="me-2" />,
+        icon: <FontAwesomeIcon icon={faCartShopping} className="nav-icon" />,
     },
     {
         component: CNavItem,
         name: 'Users',
         to: '/users',
-        icon: <FontAwesomeIcon icon={faUser} className="me-2" />,
+        icon: <FontAwesomeIcon icon={faUser} className="nav-icon" />,
     },
     {
         component: CNavItem,
         name: 'Settings',
         to: '/settings',
-        icon: <FontAwesomeIcon icon={faGear} className="me-2" />,
+        icon: <FontAwesomeIcon icon={faGear} className="nav-icon" />,
     },
 ]
 

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import {
     CCloseButton,
@@ -8,6 +8,7 @@ import {
     CSidebarHeader,
     CSidebarToggler,
     CImage,
+    useColorModes,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { useNavigate } from 'react-router-dom'
@@ -19,7 +20,9 @@ const AppSidebar = () => {
     const dispatch = useDispatch()
     const unfoldable = useSelector((state) => state.sidebarUnfoldable)
     const sidebarShow = useSelector((state) => state.sidebarShow)
-    const user = useSelector((state) => state.user)
+    const { colorMode, isColorModeSet, setColorMode } = useColorModes(
+        'coreui-free-react-admin-template-theme',
+    )
 
     return (
         <CSidebar
@@ -32,17 +35,12 @@ const AppSidebar = () => {
             }}
         >
             <CSidebarHeader>
-                <CSidebarBrand to="/">
+                <CSidebarBrand to="/" className="text-decoration-none">
+                    <span className="sidebar-brand-full fs-5">Point of Sale</span>
                     <CImage
-                        src="/images/header.png"
-                        className="sidebar-brand-full rounded"
-                        width={220}
-                        height={30}
-                    />
-                    <CImage
-                        src="/favicon.png"
+                        src={`/images/brand-narrow-${colorMode}.png`}
                         className="sidebar-brand-narrow"
-                        width={50}
+                        width={30}
                         height={30}
                     />
                 </CSidebarBrand>

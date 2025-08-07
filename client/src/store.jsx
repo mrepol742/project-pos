@@ -2,6 +2,7 @@ import { legacy_createStore as createStore } from 'redux'
 
 const initialState = {
     sidebarShow: true,
+    sidebarUnfoldable: false,
     theme: 'light',
     user: null,
 }
@@ -11,7 +12,7 @@ const changeState = (state = initialState, action) => {
         case 'SET_USER':
             return { ...state, user: action.payload }
         default:
-            return state
+            return { ...state, ...action }
     }
 }
 
