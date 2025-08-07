@@ -51,6 +51,7 @@ Route::group(['prefix' => 'api'], function () {
     Route::middleware(['verify.session:admin,super_admin'])->group(function () {
         
         Route::get('/users', [UserController::class, 'getUsers']);
+        Route::get('/roles', [UserController::class, 'getRoles']);
         Route::post('/users', [UserController::class, 'createUser']);
 
         Route::group(['prefix' => 'export'], function () {

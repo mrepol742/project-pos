@@ -12,6 +12,8 @@ import {
 } from '@coreui/react'
 import { Helmet } from 'react-helmet'
 import { toast } from 'react-toastify'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPlus } from '@fortawesome/free-solid-svg-icons'
 
 const NewUser = () => {
     const [roles, setRoles] = useState([])
@@ -71,22 +73,19 @@ const NewUser = () => {
         setRoles(fetchRoles.data)
     }
 
+    const toCapitalize = (str) => {
+        return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase()
+    }
+
     useEffect(() => {
         fetchData()
     }, [])
 
     return (
         <CForm onSubmit={handleSubmit} className="p-2">
-            <div className="d-flex justify-content-between">
-                <h3 className="mb-3">New User</h3>
-                <div>
-                    <CButton color="secondary" className="me-2" size="sm">
-                        Cancel
-                    </CButton>
-                    <CButton color="primary" size="sm" type="submit">
-                        Save
-                    </CButton>
-                </div>
+            <div className="d-flex align-items-center mb-3 fs-5">
+                <FontAwesomeIcon icon={faPlus} className="me-2" />
+                Create New User
             </div>
             <CRow>
                 <CCol xs={12} md={6}>
@@ -146,8 +145,8 @@ const NewUser = () => {
                         options={[
                             { label: 'Select a role', value: '' },
                             ...roles.map((d) => ({
-                                label: d.name,
-                                value: d.id,
+                                label: toCapitalize(d.name.replace(/_/g, ' ')),
+                                value: d.name,
                             })),
                         ]}
                     />
@@ -179,6 +178,14 @@ const NewUser = () => {
                     />
                 </CCol>
             </CRow>
+            <div className="d-flex justify-content-end mt-3">
+                <CButton color="secondary" className="me-2" size="sm">
+                    Cancel
+                </CButton>
+                <CButton color="primary" size="sm" type="submit">
+                    Create User
+                </CButton>
+            </div>
         </CForm>
     )
 }

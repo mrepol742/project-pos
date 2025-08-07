@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -38,6 +39,21 @@ class UserController extends Controller
         }
     }
 
+    /**
+     * Get all roles.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getRoles()
+    {
+        try {
+            $roles = Role::all();
+            return response()->json($roles);
+        } catch (\Exception $e) {
+            Log::error('Error handling request: ' . $e->getMessage());
+            return response()->json(['error' => 'Internal server error'], 500);
+        }
+    }
 
     /**
      *
