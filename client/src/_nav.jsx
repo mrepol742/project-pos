@@ -17,10 +17,6 @@ const _nav = [
         icon: <FontAwesomeIcon icon={faChartSimple} className="nav-icon" />,
     },
     {
-        component: CNavTitle,
-        name: 'Store',
-    },
-    {
         component: CNavItem,
         name: 'Products',
         to: '/products',

@@ -37,19 +37,21 @@ const AppHeaderDropdown = () => {
                 </div>
             </CDropdownToggle>
             <CDropdownMenu className="pt-0" placement="bottom-end">
-                <CDropdownHeader className="bg-body-secondary fw-semibold mb-2">
+                <CDropdownHeader className="bg-body-secondary fw-semibold mb-2 d-flex flex-row align-items-center">
                     <div
-                        className="rounded-pill bg-primary d-flex align-items-center justify-content-center mb-2 fs-4"
-                        style={{ width: '70px', height: '70px', color: 'white' }}
+                        className="rounded-pill bg-primary d-flex align-items-center justify-content-center me-2 fs-6"
+                        style={{ width: '40px', height: '40px', color: 'white' }}
                     >
                         {getInitials(user.name)}
                     </div>
-                    <span className="d-block text-truncate" style={{ maxWidth: '250px' }}>
-                        {user.name}
-                    </span>
-                    <span className="d-block text-truncate" style={{ maxWidth: '250px' }}>
-                        {user.email}
-                    </span>
+                    <div>
+                        <span className="d-block text-truncate" style={{ maxWidth: '250px' }}>
+                            {user.name}
+                        </span>
+                        <span className="d-block text-truncate" style={{ maxWidth: '250px' }}>
+                            {user.email}
+                        </span>
+                    </div>
                 </CDropdownHeader>
                 <CDropdownItem onClick={() => navigate('/account')}>
                     <FontAwesomeIcon icon={faCircleUser} className="me-2" />
