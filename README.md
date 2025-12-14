@@ -41,8 +41,6 @@ A lightweight, web-based and offline-capable POS system built for flawless perfo
 
 ## License
 
-This project is licensed under the **MIT License with Commons Clause**.
+This project is licensed under the [Polyform Noncommercial License 1.0.0](LICENSE).
 
-- **Commercial Use Restriction**: You may not use the software for commercial purposes, as defined in the [LICENSE](LICENSE) file. Commercial use includes using the software as part of any service offered for a fee or any use that generates revenue either directly or indirectly.
-
-See the full [LICENSE](LICENSE) file for more details.
+&copy; 2025 Melvin Jones Repol.
