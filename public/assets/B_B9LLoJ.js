@@ -1,0 +1,5 @@
+/**
+ * © 2025 Melvin Jones Repol. All rights reserved.
+ * This project is licensed under the MIT License with Commons Clause.
+*/
+import{m as n}from"./DaT6jCK6.js";function r(n){return"string"==typeof n}function i(n,r,i){return i.indexOf(n)===r}function t(n){return-1===n.indexOf(",")?n:n.split(",")}function e(n){if(!n)return n;if("C"===n||"posix"===n||"POSIX"===n)return"en-US";if(-1!==n.indexOf(".")){var r=n.split(".")[0];return e(void 0===r?"":r)}if(-1!==n.indexOf("@")){var i=n.split("@")[0];return e(void 0===i?"":i)}if(-1===n.indexOf("-")||(t=n).toLowerCase()!==t)return n;var t,a=n.split("-"),o=a[0],f=a[1],u=void 0===f?"":f;return"".concat(o,"-").concat(u.toUpperCase())}var a=n(function(n){var a=void 0===n?{}:n,o=a.useFallbackLocale,f=void 0===o||o,u=a.fallbackLocale,c=void 0===u?"en-US":u,v=[];if("undefined"!=typeof navigator){for(var l=[],s=0,d=navigator.languages||[];s<d.length;s++){var p=d[s];l=l.concat(t(p))}var g=navigator.language,O=g?t(g):g;v=v.concat(l,O)}return f&&v.push(c),v.filter(r).map(e).filter(i)},{cacheKey:JSON.stringify});var o=n(function(n){return a(n)[0]||null},{cacheKey:JSON.stringify});export{o as g};

@@ -1,5 +1,0 @@
-/**
- * © 2025 Melvin Jones Repol. All rights reserved.
- * This project is licensed under the MIT License with Commons Clause.
-*/
-import{g as e}from"./Dph47E3T.js";import{r as t}from"./CZHQSwml.js";import{r}from"./Bn0FtMhX.js";var n,a;const o=e(function(){if(a)return n;a=1;const e=t(),o=r(),c=new WeakMap,s=new WeakMap,i=(t,{cacheKey:r,cache:n=new Map,maxAge:a}={})=>{"number"==typeof a&&o(n);const c=function(...e){const o=r?r(e):e[0],c=n.get(o);if(c)return c.data;const s=t.apply(this,e);return n.set(o,{data:s,maxAge:a?Date.now()+a:Number.POSITIVE_INFINITY}),s};return e(c,t,{ignoreNonConfigurable:!0}),s.set(c,n),c};return i.decorator=(e={})=>(t,r,n)=>{const a=t[r];if("function"!=typeof a)throw new TypeError("The decorated value must be a function");delete n.value,delete n.writable,n.get=function(){if(!c.has(this)){const t=i(a,e);return c.set(this,t),t}return c.get(this)}},i.clear=e=>{const t=s.get(e);if(!t)throw new TypeError("Can't clear a function that was not memoized!");if("function"!=typeof t.clear)throw new TypeError("The cache Map can't be cleared!");t.clear()},n=i}());export{o as m};
