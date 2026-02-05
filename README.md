@@ -3,44 +3,57 @@ A lightweight, web-based and offline-capable POS system built for flawless perfo
 
 ## Pre-requisites
 
-- Node.js v23.^
-- PHP v8.4.6
+- PostgreSQL
+- Node.js
+- PHP
 - Composer
-- XAMPP (mysql) or install any dedicated mysql server
 
-### **1. Setup and Initialization**
+## Setting up
 
-- **Install Dependencies**  
-
-  ```sh
-  npm run i
-  ```
-
-- **Setup Environments**  
+- install dependecies
 
   ```sh
-  cd server && cp .env.example .env
+  composer install && npm install
   ```
 
----
-
-### **2. Application Development**
-
-- **Start Application**  
+- create environment
 
   ```sh
-  npm run start
+  cp .env.example .env
   ```
 
-- **Lint Code**  
+- generate app key
 
   ```sh
-  npm run lint
+  php artisan key:generate
   ```
----
+- database migration
+
+  ```sh
+  php artisan migrate --seed
+  ```
+
+## Start application
+
+```sh
+  npm run dev
+```
+
+## Refresh migration
+
+```sh
+  php artisan migrate:refresh
+  php artisan db:seed
+```
+
+## Refresh cache
+
+```sh
+  php artisan config:cache
+```
 
 ## License
 
 This project is licensed under the [Polyform Noncommercial License 1.0.0](LICENSE).
 
-&copy; 2025 Melvin Jones Repol.
+&copy; 2026 Melvin Jones Repol.

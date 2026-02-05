@@ -11,8 +11,6 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\SalesController;
 use App\Http\Controllers\PrinterController;
 
-Route::get('/', fn() => view('index'));
-
 Route::group(['prefix' => 'api'], function () {
 
     // Global
@@ -49,7 +47,7 @@ Route::group(['prefix' => 'api'], function () {
      * Admin and Super Admin routes
      */
     Route::middleware(['verify.session:admin,super_admin'])->group(function () {
-        
+
         Route::get('/users', [UserController::class, 'getUsers']);
         Route::get('/roles', [UserController::class, 'getRoles']);
         Route::post('/users', [UserController::class, 'createUser']);
@@ -79,3 +77,7 @@ Route::group(['prefix' => 'api'], function () {
         Route::get('/sales-history', [SalesController::class, 'getTodaysSales']);
     });
 });
+
+Route::get('/{any}', function () {
+    return view('index');
+})->where('any', '.*');

@@ -1,5 +1,5 @@
 import { defineConfig } from 'vite'
-import banner from 'vite-plugin-banner'
+import laravel from 'laravel-vite-plugin'
 import react from '@vitejs/plugin-react'
 import htmlMinifier from 'vite-plugin-html-minifier'
 import path from 'node:path'
@@ -9,11 +9,14 @@ export default defineConfig(() => {
     return {
         base: '/',
         build: {
-            outDir: 'build',
+            outDir: 'public/build',
             chunkSizeWarningLimit: 800,
             minify: 'terser',
             sourcemap: false,
             rollupOptions: {
+                input: {
+                    app: path.resolve(__dirname, 'resources/react/index.jsx'),
+                },
                 onwarn(warning, warn) {
                     if (warning.plugin === 'vite:esbuild') {
                         throw new Error(`Vite ESBuild error: ${warning.message}`)
@@ -47,7 +50,7 @@ export default defineConfig(() => {
         },
         esbuild: {
             loader: 'jsx',
-            include: /src\/.*\.jsx?$/,
+            include: /resources\/.*\.jsx?$/,
             exclude: [],
             target: 'esnext',
         },
@@ -63,32 +66,34 @@ export default defineConfig(() => {
         },
         plugins: [
             react(),
-            banner(
-                `/**
- * © 2025 Melvin Jones Repol. All rights reserved.
- * This project is licensed under the MIT License with Commons Clause.
-*/`,
-            ),
             htmlMinifier({
                 collapseWhitespace: true,
                 removeComments: true,
                 removeRedundantAttributes: true,
                 useShortDoctype: true,
             }),
+            laravel({
+                input: [],
+                refresh: true,
+            }),
         ],
         resolve: {
             alias: [
                 {
-                    find: 'src/',
-                    replacement: `${path.resolve(__dirname, 'src')}/`,
+                    find: 'resources/react',
+                    replacement: `${path.resolve(__dirname, 'resources/react')}/`,
                 },
             ],
             extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json', '.scss'],
         },
         server: {
-            port: 3000,
-            proxy: {
-                // https://vitejs.dev/config/server-options.html
+            host: 'localhost',
+            port: 5173,
+            strictPort: true,
+            cors: true,
+            headers: {
+                'Cross-Origin-Opener-Policy': 'same-origin',
+                'Cross-Origin-Embedder-Policy': 'require-corp',
             },
         },
     }

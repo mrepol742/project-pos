@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="utf-8" />
@@ -10,11 +10,12 @@
         <title>Project POS</title>
         <link rel="manifest" href="/manifest.json" />
         <link rel="shortcut icon" href="/favicon.ico" />
+        @viteReactRefresh
     </head>
     <body>
         <noscript> You need to enable JavaScript to run this app </noscript>
         <div id="root"></div>
-        <script type="module" src="/src/index.jsx"></script>
+        @vite('resources/react/index.jsx')
         <!-- built files will be auto injected -->
     </body>
 </html>

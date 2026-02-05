@@ -3,7 +3,7 @@ import cookies from 'js-cookie'
 
 const excludedPaths = ['/login', '/register']
 const axiosInstance = axios.create({
-    baseURL: 'http://localhost:8000/api',
+    baseURL: '/api',
     timeout: 30000,
     headers: {
         'Content-Type': 'application/json',

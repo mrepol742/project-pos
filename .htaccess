@@ -1,0 +1,14 @@
+<IfModule mod_rewrite.c>
+   RewriteEngine On
+
+   # Redirect www to non-www
+   RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
+   RewriteRule ^(.*)$ https://%1/$1 [R=301,L]
+
+   # Remove public from URL
+   RewriteCond %{REQUEST_URI} !^/public/
+   RewriteRule ^(.*)$ /public/$1 [L]
+
+   # Handle public folder requests
+   RewriteRule ^(.*)$ index.php/$1 [L]
+</IfModule>
