@@ -55,7 +55,7 @@ const Products = () => {
     }
 
     const exportProducts = async () => {
-        window.open('http://localhost:8000/api/export/products', '_blank')
+        window.open('/api/export/products', '_blank')
     }
 
     return (

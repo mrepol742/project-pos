@@ -2,44 +2,55 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
+use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Rap2hpoutre\FastExcel\FastExcel;
 
 class ExportController extends Controller
 {
-    public function exportUsers()
+    /**
+     * Export users to Excel file using FastExcel with cursor for memory efficiency.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function exportUsers(Request $request)
     {
         try {
-            $data = [];
-            $users = \App\Models\User::all();
+            $generator = function () {
+                foreach (User::cursor() as $user) {
+                    yield $user;
+                }
+            };
 
-            $data[] = array_keys($users->first()->toArray());
-
-            foreach ($users as $user) {
-                $data[] = $user->toArray();
-            }
-
-            return (new FastExcel(collect($data)))->download("users.xlsx");
+            $filename = 'users_export_' . Carbon::now()->format('Y-m-d') . '.xlsx';
+            return (new FastExcel($generator()))->download($filename);
         } catch (\Exception $e) {
             Log::error('Error handling request: ' . $e->getMessage());
             return response()->json(['error' => 'Internal server error'], 500);
         }
     }
 
-    public function exportProducts()
+    /**
+     * Export products to Excel file using FastExcel with cursor for memory efficiency.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function exportProducts(Request $request)
     {
         try {
-            $data = [];
-            $products = \App\Models\Product::all();
+            $generator = function () {
+                foreach (Product::cursor() as $product) {
+                    yield $product;
+                }
+            };
 
-            $data[] = array_keys($products->first()->toArray());
-
-            foreach ($products as $product) {
-                $data[] = $product->toArray();
-            }
-
-            return (new FastExcel(collect($data)))->download("products.xlsx");
+            $filename = 'products_export_' . Carbon::now()->format('Y-m-d') . '.xlsx';
+            return (new FastExcel($generator()))->download($filename);
         } catch (\Exception $e) {
             Log::error('Error handling request: ' . $e->getMessage());
             return response()->json(['error' => 'Internal server error'], 500);
