@@ -66,5 +66,8 @@ export const AvgItems = () => {
         },
     }
 
+    if (data.datasets[0].data.every((v) => v === 0))
+        return <div className="text-center text-muted">No data available</div>
+
     return <CChart type="doughnut" data={data} options={options} ref={chartRef} />
 }
