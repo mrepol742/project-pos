@@ -96,7 +96,7 @@ const AppHeader = () => {
                     setShowAppModal,
                 }}
             >
-                <Product />
+                {({ onClose }) => <Product onCancel={onClose} />}
             </AppModal>
         </>
     )

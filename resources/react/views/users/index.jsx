@@ -65,7 +65,7 @@ const Users = () => {
                     setShowAppModal,
                 }}
             >
-                <User />
+                {({ onClose }) => <User onCancel={onClose} />}
             </AppModal>
             <div className="d-flex justify-content-between align-items-center mb-3">
                 <div>

@@ -14,8 +14,9 @@ import { Helmet } from 'react-helmet'
 import { toast } from 'react-toastify'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
+import PropTypes from 'prop-types'
 
-const NewCategory = () => {
+const NewCategory = ({ onCancel }) => {
     const [category, setCategory] = useState({
         name: '',
         description: '',
@@ -72,7 +73,7 @@ const NewCategory = () => {
                 required
             />
             <div className="d-flex justify-content-end mt-3">
-                <CButton color="secondary" className="me-2" size="sm">
+                <CButton color="secondary" className="me-2" size="sm" onClick={onCancel}>
                     Cancel
                 </CButton>
                 <CButton color="primary" size="sm" type="submit">
@@ -84,3 +85,7 @@ const NewCategory = () => {
 }
 
 export default NewCategory
+
+NewCategory.propTypes = {
+    onCancel: PropTypes.func.isRequired,
+}

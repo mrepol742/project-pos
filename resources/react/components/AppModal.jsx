@@ -5,6 +5,10 @@ import PropTypes from 'prop-types'
 const AppModal = ({ data, children }) => {
     const { showAppModal, setShowAppModal } = data
 
+    const handleClose = () => {
+        setShowAppModal(false)
+    }
+
     return (
         <>
             <CModal
@@ -13,7 +17,9 @@ const AppModal = ({ data, children }) => {
                 visible={showAppModal}
                 onClose={() => setShowAppModal(false)}
             >
-                <CModalBody>{children}</CModalBody>
+                <CModalBody>
+                    {typeof children === 'function' ? children({ onClose: handleClose }) : children}
+                </CModalBody>
             </CModal>
         </>
     )

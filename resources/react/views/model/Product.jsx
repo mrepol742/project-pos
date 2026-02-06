@@ -14,8 +14,9 @@ import { Helmet } from 'react-helmet'
 import { toast } from 'react-toastify'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
+import PropTypes from 'prop-types'
 
-const Product = () => {
+const Product = ({ onCancel }) => {
     const [categories, setCategories] = useState([])
     const [product, setProduct] = useState({
         name: '',
@@ -289,7 +290,7 @@ const Product = () => {
                 />
             )}
             <div className="d-flex justify-content-end mt-3">
-                <CButton color="secondary" className="me-2" size="sm">
+                <CButton color="secondary" className="me-2" size="sm" onClick={onCancel}>
                     Cancel
                 </CButton>
                 <CButton color="primary" size="sm" type="submit">
@@ -301,3 +302,7 @@ const Product = () => {
 }
 
 export default Product
+
+Product.propTypes = {
+    onCancel: PropTypes.func.isRequired,
+}

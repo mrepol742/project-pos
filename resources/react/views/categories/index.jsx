@@ -67,7 +67,7 @@ const Categories = () => {
                     setShowAppModal,
                 }}
             >
-                <Category />
+                {({ onClose }) => <Category onCancel={onClose} />}
             </AppModal>
             {loading && (
                 <div className="d-flex justify-content-center align-items-center">

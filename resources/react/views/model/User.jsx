@@ -14,8 +14,9 @@ import { Helmet } from 'react-helmet'
 import { toast } from 'react-toastify'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
+import PropTypes from 'prop-types'
 
-const NewUser = () => {
+const NewUser = ({ onCancel }) => {
     const [roles, setRoles] = useState([])
     const [user, setUser] = useState({
         name: '',
@@ -181,7 +182,7 @@ const NewUser = () => {
                 </CCol>
             </CRow>
             <div className="d-flex justify-content-end mt-3">
-                <CButton color="secondary" className="me-2" size="sm">
+                <CButton color="secondary" className="me-2" size="sm" onClick={onCancel}>
                     Cancel
                 </CButton>
                 <CButton color="primary" size="sm" type="submit">
@@ -193,3 +194,7 @@ const NewUser = () => {
 }
 
 export default NewUser
+
+NewUser.propTypes = {
+    onCancel: PropTypes.func.isRequired,
+}
