@@ -406,7 +406,7 @@ const PointOfSale = () => {
             >
                 <span style={{ fontSize: '4vw', fontWeight: 700, opacity: 0.08 }}>Project POS</span>
                 <span className="d-block" style={{ opacity: 0.2 }}>
-                    https://mrepol742.github.io
+                    www.melvinjonesrepol.com
                 </span>
             </div>
             <DeleteModal
@@ -509,13 +509,6 @@ const PointOfSale = () => {
                                     <CTableHeaderCell
                                         scope="col"
                                         className="text-uppercase"
-                                        style={{ width: 50, maxWidth: 80 }}
-                                    >
-                                        QTY
-                                    </CTableHeaderCell>
-                                    <CTableHeaderCell
-                                        scope="col"
-                                        className="text-uppercase"
                                         style={{ minWidth: 180 }}
                                     >
                                         Item
@@ -530,7 +523,14 @@ const PointOfSale = () => {
                                     <CTableHeaderCell
                                         scope="col"
                                         className="text-uppercase text-end"
-                                        style={{ width: 110, maxWidth: 130 }}
+                                        style={{ width: 50, maxWidth: 120 }}
+                                    >
+                                        QTY
+                                    </CTableHeaderCell>
+                                    <CTableHeaderCell
+                                        scope="col"
+                                        className="text-uppercase text-end"
+                                        style={{ width: 50, maxWidth: 120 }}
                                     >
                                         Total
                                     </CTableHeaderCell>
@@ -550,13 +550,7 @@ const PointOfSale = () => {
                                                 active={selectedProduct.includes(product.date)}
                                                 onClick={() => handleFocusClick(product.date)}
                                             >
-                                                <CTableDataCell
-                                                    className={`${product.deleted && 'text-danger'}`}
-                                                    style={{ width: 50, maxWidth: 80 }}
-                                                >
-                                                    {product.quantity}
-                                                </CTableDataCell>
-                                                <CTableDataCell style={{ minWidth: 180 }}>
+                                                <CTableDataCell>
                                                     <span
                                                         className={`${product.deleted && 'text-danger'}`}
                                                     >
@@ -571,7 +565,6 @@ const PointOfSale = () => {
                                                 </CTableDataCell>
                                                 <CTableDataCell
                                                     className={`${product.deleted && 'text-danger'} text-end`}
-                                                    style={{ width: 100, maxWidth: 120 }}
                                                 >
                                                     {calculatePrice(
                                                         priceWithTax,
@@ -597,7 +590,11 @@ const PointOfSale = () => {
                                                 </CTableDataCell>
                                                 <CTableDataCell
                                                     className={`${product.deleted && 'text-danger'} text-end`}
-                                                    style={{ width: 110, maxWidth: 130 }}
+                                                >
+                                                    {product.quantity}
+                                                </CTableDataCell>
+                                                <CTableDataCell
+                                                    className={`${product.deleted && 'text-danger'} text-end`}
                                                 >
                                                     {calculateTotal(
                                                         priceWithTax,

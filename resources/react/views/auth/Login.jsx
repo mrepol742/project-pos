@@ -67,12 +67,14 @@ const Login = () => {
             <CContainer style={{ position: 'relative', zIndex: 3 }}>
                 <CRow className="justify-content-center">
                     <CCol md={7} lg={5} xl={4}>
-                        <CCard className="p-4 border-0">
+                        <CCard className="p-4 border-0 rounded-4 shadow">
                             <CCardBody>
                                 <CForm onSubmit={handleLogin}>
                                     <h2>Project POS</h2>
-                                    <p className="text-body-secondary">Sign In to your account</p>
-                                    <CInputGroup className="mb-3">
+                                    <p className="text-body-secondary">
+                                        Sign in to continue to your account
+                                    </p>
+                                    <CInputGroup className="mb-3 border rounded">
                                         <CInputGroupText className="border-0">
                                             <CIcon icon={cilUser} />
                                         </CInputGroupText>
@@ -85,7 +87,7 @@ const Login = () => {
                                             placeholder="Username or Email"
                                         />
                                     </CInputGroup>
-                                    <CInputGroup className="mb-4">
+                                    <CInputGroup className="mb-4 border rounded">
                                         <CInputGroupText className="border-0">
                                             <CIcon icon={cilLockLocked} />
                                         </CInputGroupText>
@@ -119,11 +121,6 @@ const Login = () => {
                                                 Login
                                             </CButton>
                                         </CCol>
-                                        {/* <CCol xs={6} className="text-right">
-                      <CButton color="link" className="px-0">
-                        Forgot password?
-                      </CButton>
-                    </CCol> */}
                                     </CRow>
                                 </CForm>
                             </CCardBody>
