@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import axiosInstance from '../../../services/axios'
 
 export const Total = () => {
     const [total, setTotal] = useState({
@@ -8,7 +9,7 @@ export const Total = () => {
     })
 
     const fetchSummaryTotal = async () => {
-        axios.get('/dashboard/summary-total').then((response) => {
+        axiosInstance.get('/dashboard/summary-total').then((response) => {
             if (response.data.error) return toast.error(response.data.error)
             setTotal(response.data)
         })

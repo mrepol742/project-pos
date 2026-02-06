@@ -32,6 +32,7 @@ import Controls from './sidebar/controls'
 import Menu from './sidebar/menu'
 import History from './popup/history'
 import EndOfDay from './popup/eod'
+import axiosInstance from '../../services/axios'
 
 const PointOfSale = () => {
     const [products, setProducts] = useState([])
@@ -165,7 +166,7 @@ const PointOfSale = () => {
     }
 
     const fetchSalesLock = async () => {
-        axios
+        axiosInstance
             .get(`/sales-lock`)
             .then((response) => {
                 if (response.data.error) return toast.error(response.data.error)
@@ -183,7 +184,7 @@ const PointOfSale = () => {
 
     const handleSalesLock = async () => {
         if (products.length === 0) return toast.error('No products in cart')
-        axios
+        axiosInstance
             .post(`/sales-lock`, {
                 products: !salesLock ? JSON.stringify(products) : '[]',
                 mode: !salesLock,

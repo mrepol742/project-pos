@@ -10,13 +10,14 @@ import {
 } from '@coreui/react'
 import { toast } from 'react-toastify'
 import timeAgo from '../../../utils/timeAgo'
+import axiosInstance from '../../../services/axios'
 
 export const LatestTransaction = () => {
     const [latestTransactions, setLatestTransactions] = useState([])
 
     const fetchLatestTransactions = async () => {
         try {
-            axios.get('/dashboard/latest-transactions').then((response) => {
+            axiosInstance.get('/dashboard/latest-transactions').then((response) => {
                 if (response.data.error) return toast.error(response.data.error)
                 setLatestTransactions(response.data)
             })

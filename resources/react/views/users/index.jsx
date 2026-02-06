@@ -16,6 +16,7 @@ import { toast } from 'react-toastify'
 import User from '../model/User'
 import AppPagination from '../../components/AppPagination'
 import AppModal from '../../components/AppModal'
+import axiosInstance from '../../services/axios'
 
 const Users = () => {
     const navigate = useNavigate()
@@ -32,7 +33,7 @@ const Users = () => {
 
     const fetchUsers = async (currentPage) => {
         try {
-            const response = await axios.get('/users', {
+            const response = await axiosInstance.get('/users', {
                 params: {
                     page: currentPage,
                 },
@@ -51,7 +52,7 @@ const Users = () => {
     }
 
     const exportUsers = async () => {
-        window.open('http://localhost:8000/api/export/users', '_blank')
+        window.open('/api/export/users', '_blank')
     }
 
     return (

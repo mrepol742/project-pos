@@ -18,6 +18,7 @@ import Product from '../model/Product'
 import AppPagination from '../../components/AppPagination'
 import { toast } from 'react-toastify'
 import AppModal from '../../components/AppModal'
+import axiosInstance from '../../services/axios'
 
 const Products = () => {
     const navigate = useNavigate()
@@ -36,7 +37,7 @@ const Products = () => {
 
     const fetchProducts = async (currentPage) => {
         try {
-            const response = await axios.get('/products/all', {
+            const response = await axiosInstance.get('/products/all', {
                 params: {
                     page: currentPage,
                 },

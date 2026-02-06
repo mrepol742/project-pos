@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react'
+import cookies from 'js-cookie'
 
 const Logout = () => {
     useEffect(() => {
@@ -6,7 +7,7 @@ const Logout = () => {
         window.location.href = '/'
     }, [])
 
-    return null;
+    return null
 }
 
 export default Logout

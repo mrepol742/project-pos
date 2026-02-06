@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { getStyle } from '@coreui/utils'
 import { CChart } from '@coreui/react-chartjs'
+import axiosInstance from '../../../services/axios'
 
 export const Earnings = () => {
     const chartRef = useRef(null)
@@ -15,7 +16,7 @@ export const Earnings = () => {
     })
 
     const fetchSummaryEarnings = async () => {
-        axios.get('/dashboard/summary-earnings').then((response) => {
+        axiosInstance.get('/dashboard/summary-earnings').then((response) => {
             if (response.data.error) return toast.error(response.data.error)
             setData({
                 ...data,

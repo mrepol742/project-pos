@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { getStyle } from '@coreui/utils'
 import { CChart } from '@coreui/react-chartjs'
+import axiosInstance from '../../../services/axios'
 
 export const AvgItems = () => {
     const chartRef = useRef(null)
@@ -15,7 +16,7 @@ export const AvgItems = () => {
     })
 
     const fetchSummaryAvgItems = async () => {
-        axios.get('/dashboard/summary-avg-items').then((response) => {
+        axiosInstance.get('/dashboard/summary-avg-items').then((response) => {
             if (response.data.error) return toast.error(response.data.error)
             setData({
                 ...data,

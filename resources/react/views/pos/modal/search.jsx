@@ -10,6 +10,7 @@ import {
 } from '@coreui/react'
 import PropTypes from 'prop-types'
 import { toast } from 'react-toastify'
+import axiosInstance from '../../../services/axios'
 
 const Search = ({ data }) => {
     const { showSearchModal, setShowSearchModal, products, setProducts, searchQuery } = data
@@ -34,7 +35,7 @@ const Search = ({ data }) => {
     const handleSearch = (query) => {
         if (query.trim() === '') return
         setLoading(true)
-        axios
+        axiosInstance
             .post('/products/search', { query })
             .then((response) => {
                 if (response.data.error) return toast.error(response.data.error)

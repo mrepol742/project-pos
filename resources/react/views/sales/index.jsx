@@ -12,6 +12,7 @@ import {
 import { toast } from 'react-toastify'
 import AppPagination from '../../components/AppPagination'
 import timeAgo from '../../utils/timeAgo'
+import axiosInstance from '../../services/axios'
 
 const Sales = () => {
     const [sales, setSales] = useState([])
@@ -26,7 +27,7 @@ const Sales = () => {
 
     const fetchSales = async (currentPage) => {
         try {
-            const response = await axios.get('/sales', {
+            const response = await axiosInstance.get('/sales', {
                 params: {
                     page: currentPage,
                 },

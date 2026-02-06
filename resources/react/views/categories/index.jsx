@@ -17,6 +17,7 @@ import Category from '../model/Category'
 import AppPagination from '../../components/AppPagination'
 import { toast } from 'react-toastify'
 import AppModal from '../../components/AppModal'
+import axiosInstance from '../../services/axios'
 
 const Categories = () => {
     const [categories, setCategories] = useState([])
@@ -31,7 +32,7 @@ const Categories = () => {
 
     const fetchCategories = async (currentPage) => {
         try {
-            const response = await axios.get('/categories', {
+            const response = await axiosInstance.get('/categories', {
                 params: {
                     page: currentPage,
                 },

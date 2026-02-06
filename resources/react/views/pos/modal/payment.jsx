@@ -13,6 +13,7 @@ import { toast } from 'react-toastify'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faDeleteLeft } from '@fortawesome/free-solid-svg-icons'
 import { reference } from '@popperjs/core'
+import axiosInstance from '../../../services/axios'
 
 const PaymentInput = ({ data }) => {
     const {
@@ -64,7 +65,7 @@ const PaymentInput = ({ data }) => {
         if (parseInt(amount) > Number.MAX_SAFE_INTEGER)
             return toast.error('Amount is greater than max safe integer')
 
-        axios
+        axiosInstance
             .post('/sales/checkout', {
                 products: products,
                 total: total,

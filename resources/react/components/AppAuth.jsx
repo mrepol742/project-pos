@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { CSpinner } from '@coreui/react'
-import PropTypes from 'prop-types'
 import { Navigate, useNavigate, Outlet } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
+import cookies from 'js-cookie'
+import axiosInstance from '../services/axios'
 
 const AppAuth = () => {
     const [status, setStatus] = useState('loading')
@@ -21,7 +22,7 @@ const AppAuth = () => {
         if (user && Object.keys(user).length > 0) return setIsAuth(true)
 
         try {
-            const response = await axios.post('/auth/verify-session', { session_id })
+            const response = await axiosInstance.post('/auth/verify-session', { session_id })
             dispatch({ type: 'SET_USER', payload: response.data.user })
             setIsAuth(true)
         } catch (error) {

@@ -15,6 +15,7 @@ import { toast } from 'react-toastify'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import PropTypes from 'prop-types'
+import axiosInstance from '../../services/axios'
 
 const NewUser = ({ onCancel }) => {
     const [roles, setRoles] = useState([])
@@ -47,7 +48,7 @@ const NewUser = ({ onCancel }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault()
-        axios
+        axiosInstance
             .post('/users', user)
             .then((response) => {
                 if (response.data.error) return toast.error(response.data.error)
@@ -70,7 +71,7 @@ const NewUser = ({ onCancel }) => {
     }
 
     const fetchData = async () => {
-        const [fetchRoles] = await Promise.all([axios.get('/roles')])
+        const [fetchRoles] = await Promise.all([axiosInstance.get('/roles')])
         setRoles(fetchRoles.data)
     }
 

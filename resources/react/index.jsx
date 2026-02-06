@@ -5,7 +5,6 @@ import 'core-js'
 
 import App from './app'
 import store from './store'
-import './bootstrap'
 
 createRoot(document.getElementById('root')).render(
     <Provider store={store}>

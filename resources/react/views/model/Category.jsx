@@ -15,6 +15,7 @@ import { toast } from 'react-toastify'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import PropTypes from 'prop-types'
+import axiosInstance from '../../services/axios'
 
 const NewCategory = ({ onCancel }) => {
     const [category, setCategory] = useState({
@@ -32,7 +33,7 @@ const NewCategory = ({ onCancel }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault()
-        axios
+        axiosInstance
             .post('/categories', category)
             .then((response) => {
                 if (response.data.error) return toast.error(response.data.error)

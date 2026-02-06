@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import React, { useState } from 'react'
 import {
     CButton,
     CCard,
@@ -16,6 +15,8 @@ import {
 import CIcon from '@coreui/icons-react'
 import { cilLockLocked, cilUser } from '@coreui/icons'
 import { toast } from 'react-toastify'
+import cookies from 'js-cookie'
+import axiosInstance from '../../services/axios'
 
 const Login = () => {
     const [formData, setFormData] = useState({
@@ -36,7 +37,7 @@ const Login = () => {
         e.preventDefault()
         const response = new Promise(async (resolve, reject) => {
             try {
-                const res = await axios.post('/auth/login', formData)
+                const res = await axiosInstance.post('/auth/login', formData)
                 if (res.data.error) {
                     return reject(res.data.error)
                 }

@@ -41,5 +41,4 @@ axiosInstance.interceptors.response.use(
     },
 )
 
-window.axios = axiosInstance
-window.cookies = cookies
+export default axiosInstance

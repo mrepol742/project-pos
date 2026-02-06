@@ -16,6 +16,7 @@ import {
 import PropTypes from 'prop-types'
 import AppPagination from '../../../components/AppPagination'
 import timeAgo from '../../../utils/timeAgo'
+import axiosInstance from '../../../services/axios'
 
 const History = ({ data }) => {
     const { popupMenu, setPopupMenu, showPopupMenu, setShowPopupMenu } = data
@@ -25,7 +26,7 @@ const History = ({ data }) => {
 
     const fetchTodaySalesHistory = async () => {
         try {
-            axios
+            axiosInstance
                 .get('/sales-history')
                 .then((response) => {
                     setHistoryData(response.data.data)
