@@ -26,7 +26,7 @@ return new class extends Migration
             $table->string('unit_measurement');
             $table->boolean('is_active')->default(true);
             $table->integer('quantity')->default(0);
-            $table->integer('category_id');
+            $table->integer('category_id')->nullable();
             $table->integer('age_restriction')->nullable();
             $table->text('description')->nullable();
             $table->double('taxes')->default(0);

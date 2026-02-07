@@ -59,7 +59,7 @@ class ProductController extends Controller
                 'unit_measurement' => 'required|string|max:255',
                 'is_active' => 'sometimes|boolean',
                 'default_quantity' => 'required|boolean',
-                'category_id' => 'required|integer|exists:categories,id',
+                'category_id' => 'nullable|integer|exists:categories,id',
                 'age_restriction' => 'nullable|integer|min:0',
                 'description' => 'nullable|string',
                 'taxes' => 'nullable|integer|min:0',
