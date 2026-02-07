@@ -1,5 +1,5 @@
-import AppContent from './AppContent'
-import AppHeader from './AppHeader'
-import AppSidebar from './AppSidebar'
+import AppContent from './content'
+import AppHeader from './header'
+import AppSidebar from './sidebar'
 
 export { AppContent, AppHeader, AppSidebar }

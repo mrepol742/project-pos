@@ -7,9 +7,9 @@ const NewUser = lazy(() => import('./views/new-user'))
 const Products = lazy(() => import('./views/products'))
 const Users = lazy(() => import('./views/users'))
 
-const Sales = lazy(() => import('./views/sales'))
+const Sales = lazy(() => import('./views/users'))
 
-const Logout = lazy(() => import('./views/auth/Logout'))
+const Logout = lazy(() => import('./views/auth/logout'))
 
 const routes = [
     { path: '/', exact: true, name: 'Home' },

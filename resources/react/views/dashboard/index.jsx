@@ -21,11 +21,11 @@ import { Helmet } from 'react-helmet'
 import { CChart } from '@coreui/react-chartjs'
 import { Chart } from 'chart.js/auto'
 import { number } from 'prop-types'
-import timeAgo from '../../utils/timeAgo'
+import timeAgo from '../../utils/time-ago'
 import { Earnings, Sales, AvgItems, Total } from './summary/index'
-import { LatestTransaction } from './detail/latestTransaction'
-import { PurchaseActivity } from './detail/purchaseActivity'
-import { EarningsActivity } from './detail/earningsActivity'
+import { LatestTransaction } from './detail/latest-transaction'
+import { PurchaseActivity } from './detail/purchase-activity'
+import { EarningsActivity } from './detail/earnings-activity'
 
 const Dashboard = () => {
     return (

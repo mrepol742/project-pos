@@ -7,6 +7,7 @@ import {
     faUser,
     faBox,
     faGear,
+    faFileAlt,
 } from '@fortawesome/free-solid-svg-icons'
 
 const _nav = [
@@ -45,6 +46,12 @@ const _nav = [
         name: 'Settings',
         to: '/settings',
         icon: <FontAwesomeIcon icon={faGear} className="nav-icon" />,
+    },
+    {
+        component: CNavItem,
+        name: 'Logs',
+        to: '/logs',
+        icon: <FontAwesomeIcon icon={faFileAlt} className="nav-icon" />,
     },
 ]
 

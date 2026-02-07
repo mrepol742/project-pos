@@ -14,8 +14,8 @@ import {
     CTableRow,
 } from '@coreui/react'
 import PropTypes from 'prop-types'
-import AppPagination from '../../../components/AppPagination'
-import timeAgo from '../../../utils/timeAgo'
+import AppPagination from '../../../components/pagination'
+import timeAgo from '../../../utils/time-ago'
 import axiosInstance from '../../../services/axios'
 
 const History = ({ data }) => {

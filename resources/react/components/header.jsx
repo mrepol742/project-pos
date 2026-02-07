@@ -25,11 +25,11 @@ import {
     cilMoon,
     cilSun,
 } from '@coreui/icons'
-import AppHeaderDropdown from './AppHeaderDropdown'
+import AppHeaderDropdown from './header-dropdown'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faAdd, faBell, faMoon, faSun } from '@fortawesome/free-solid-svg-icons'
-import AppModal from './AppModal'
-import Product from '../views/model/Product'
+import AppModal from './modal'
+import Product from '../views/modals/product'
 
 const AppHeader = () => {
     const headerRef = useRef()

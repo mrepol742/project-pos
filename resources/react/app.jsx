@@ -3,14 +3,14 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { CSpinner, useColorModes } from '@coreui/react'
 import { Slide, ToastContainer } from 'react-toastify'
-import AppErrorBoundary from './components/AppErrorBoundary'
+import AppErrorBoundary from './components/error-boundary'
 import AOS from 'aos'
 import './scss/style.scss'
-import Auth from './components/AppAuth'
+import Auth from './components/auth'
 
-const DefaultLayout = lazy(() => import('./layout/DefaultLayout'))
-const Login = lazy(() => import('./views/auth/Login'))
-const Logout = lazy(() => import('./views/auth/Logout'))
+const DefaultLayout = lazy(() => import('./layout/default-layout'))
+const Login = lazy(() => import('./views/auth/login'))
+const Logout = lazy(() => import('./views/auth/logout'))
 
 const App = () => {
     AOS.init()

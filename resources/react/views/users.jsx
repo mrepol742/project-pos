@@ -13,10 +13,10 @@ import {
     CCol,
 } from '@coreui/react'
 import { toast } from 'react-toastify'
-import User from '../model/User'
-import AppPagination from '../../components/AppPagination'
-import AppModal from '../../components/AppModal'
-import axiosInstance from '../../services/axios'
+import User from './modals/user'
+import AppPagination from '../components/pagination'
+import AppModal from '../components/modal'
+import axiosInstance from '../services/axios'
 
 const Users = () => {
     const navigate = useNavigate()

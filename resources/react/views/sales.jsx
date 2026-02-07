@@ -10,9 +10,9 @@ import {
     CTableRow,
 } from '@coreui/react'
 import { toast } from 'react-toastify'
-import AppPagination from '../../components/AppPagination'
-import timeAgo from '../../utils/timeAgo'
-import axiosInstance from '../../services/axios'
+import AppPagination from '../components/pagination'
+import timeAgo from '../utils/time-ago'
+import axiosInstance from '../services/axios'
 
 const Sales = () => {
     const [sales, setSales] = useState([])

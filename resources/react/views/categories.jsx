@@ -13,11 +13,11 @@ import {
 } from '@coreui/react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faAdd, faEdit, faTrash } from '@fortawesome/free-solid-svg-icons'
-import Category from '../model/Category'
-import AppPagination from '../../components/AppPagination'
+import Category from './modals/category'
+import AppPagination from '../components/pagination'
 import { toast } from 'react-toastify'
-import AppModal from '../../components/AppModal'
-import axiosInstance from '../../services/axios'
+import AppModal from '../components/modal'
+import axiosInstance from '../services/axios'
 
 const Categories = () => {
     const [categories, setCategories] = useState([])

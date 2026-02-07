@@ -9,7 +9,7 @@ import {
     CTableRow,
 } from '@coreui/react'
 import { toast } from 'react-toastify'
-import timeAgo from '../../../utils/timeAgo'
+import timeAgo from '../../../utils/time-ago'
 import axiosInstance from '../../../services/axios'
 
 export const LatestTransaction = () => {

@@ -12,7 +12,7 @@ import {
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { useNavigate } from 'react-router-dom'
-import { AppSidebarNav } from './AppSidebarNav'
+import { AppSidebarNav } from './sidebar-nav'
 import navigation from '../_nav'
 
 const AppSidebar = () => {

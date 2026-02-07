@@ -14,11 +14,11 @@ import {
 import { useNavigate } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons'
-import Product from '../model/Product'
-import AppPagination from '../../components/AppPagination'
+import Product from './modals/product'
+import AppPagination from '../components/pagination'
 import { toast } from 'react-toastify'
-import AppModal from '../../components/AppModal'
-import axiosInstance from '../../services/axios'
+import AppModal from '../components/modal'
+import axiosInstance from '../services/axios'
 
 const Products = () => {
     const navigate = useNavigate()
