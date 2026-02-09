@@ -268,7 +268,7 @@ const PointOfSale = () => {
             return
         }
 
-        axios
+        axiosInstance
             .get(`/products/${query}`)
             .then((response) => {
                 if (response.data.error) return toast.error(response.data.error)
