@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import {
     CRow,
     CCol,
@@ -55,6 +55,7 @@ const PointOfSale = () => {
     const [showBanner, setShowBanner] = useState(false)
     const [popupMenu, setPopupMenu] = useState('')
     const [showPopupMenu, setShowPopupMenu] = useState(false)
+    const inputRef = useRef(null)
 
     const addProduct = (product) => {
         setProducts((prevProducts) => {
@@ -210,11 +211,24 @@ const PointOfSale = () => {
             }
         }
 
+        const handler = (e) => {
+            const isMac = navigator.platform.toUpperCase().includes('MAC')
+            const isShortcut =
+                (isMac && e.metaKey && e.key === 'k') || (!isMac && e.ctrlKey && e.key === 'k')
+
+            if (isShortcut) {
+                e.preventDefault()
+                inputRef.current?.focus()
+            }
+        }
+
+        window.addEventListener('keydown', handler)
         window.addEventListener('beforeunload', handleBeforeUnload)
         window.addEventListener('keydown', handleKeyDown)
         return () => {
             window.removeEventListener('keydown', handleKeyDown)
             window.removeEventListener('beforeunload', handleBeforeUnload)
+            window.removeEventListener('keydown', handler)
         }
     }, [isDirty])
 
@@ -483,6 +497,7 @@ const PointOfSale = () => {
             <CRow className="flex-grow-1 overflow-hidden">
                 <CCol className="d-flex flex-column h-100 pe-0">
                     <CFormInput
+                        ref={inputRef}
                         className="rounded-0 py-3 border-0 border-bottom"
                         type="search"
                         placeholder="Search product by name or barcode"
