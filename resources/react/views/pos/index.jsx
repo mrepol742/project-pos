@@ -465,6 +465,7 @@ const PointOfSale = () => {
                     products,
                     setProducts,
                     searchQuery,
+                    handleSearch,
                 }}
             />
             <CalendarModal
