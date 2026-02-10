@@ -29,6 +29,12 @@ export const LatestTransaction = () => {
 
     useEffect(() => {
         fetchLatestTransactions()
+
+        const interval = setInterval(() => {
+            fetchLatestTransactions()
+        }, 60000)
+
+        return () => clearInterval(interval)
     }, [])
 
     return (
@@ -36,14 +42,7 @@ export const LatestTransaction = () => {
             <div className="d-flex justify-content-between align-items-center mb-3">
                 <h6>Latest Transactions</h6>
                 <div>
-                    <CButton
-                        className="me-1"
-                        size="sm"
-                        onClick={() => {
-                            setLatestTransactions([])
-                            fetchLatestTransactions()
-                        }}
-                    >
+                    <CButton className="me-1" size="sm" onClick={() => fetchLatestTransactions()}>
                         Refresh
                     </CButton>
                     <CButton size="sm" onClick={() => navigate('/sales')}>
