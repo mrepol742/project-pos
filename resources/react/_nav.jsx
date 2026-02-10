@@ -8,6 +8,7 @@ import {
     faBox,
     faGear,
     faFileAlt,
+    faStar,
 } from '@fortawesome/free-solid-svg-icons'
 
 const _nav = [
@@ -27,13 +28,19 @@ const _nav = [
         component: CNavItem,
         name: 'Categories',
         to: '/categories',
-        icon: <FontAwesomeIcon icon={faBox} className="nav-icon" />,
+        icon: <FontAwesomeIcon icon={faStar} className="nav-icon" />,
     },
     {
         component: CNavItem,
         name: 'Sales',
         to: '/sales',
         icon: <FontAwesomeIcon icon={faCartShopping} className="nav-icon" />,
+    },
+    {
+        component: CNavItem,
+        name: 'Drive',
+        to: '/drive',
+        icon: <FontAwesomeIcon icon={faFileAlt} className="nav-icon" />,
     },
     {
         component: CNavItem,

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DriveController;
 use App\Http\Controllers\LogController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
@@ -48,6 +49,11 @@ Route::group(['prefix' => 'api'], function () {
         Route::get('/users', [UserController::class, 'getUsers']);
         Route::get('/roles', [UserController::class, 'getRoles']);
         Route::post('/users', [UserController::class, 'createUser']);
+
+        Route::prefix('files')->group(function () {
+            Route::get('/', [DriveController::class, 'getFiles']);
+            Route::post('/', [DriveController::class, 'uploadFile']);
+        });
 
         Route::prefix('export')->group(function () {
             Route::get('/users', [ExportController::class, 'exportUsers']);

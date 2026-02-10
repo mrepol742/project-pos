@@ -1,6 +1,7 @@
 import React, { Suspense, lazy } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { CContainer, CSpinner } from '@coreui/react'
+import Drive from '../views/drive'
 
 const Dashboard = lazy(() => import('../views/dashboard'))
 const Products = lazy(() => import('../views/products'))
@@ -19,6 +20,7 @@ const AppContent = () => {
                     <Route path="/categories" element={<Categories />} />
                     <Route path="/users" element={<Users />} />
                     <Route path="/sales" element={<Sales />} />
+                    <Route path="/drive" element={<Drive />} />
                     <Route path="/logs" element={<Logs />} />
                 </Routes>
             </Suspense>

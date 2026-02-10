@@ -42,7 +42,7 @@ const Categories = () => {
             setTotalPages(response.data.totalPages)
             setCurrentPage(response.data.currentPage)
         } catch (error) {
-            console.error('Error fetching Users:', error)
+            console.error('Error fetching Categories:', error)
             toast.error('Failed to fetch categories list')
         } finally {
             setLoading(false)
