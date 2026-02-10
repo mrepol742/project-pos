@@ -5,6 +5,7 @@ import axiosInstance from '../services/axios'
 import { toast } from 'react-toastify'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faDownload } from '@fortawesome/free-solid-svg-icons'
+import AppPagination from '../components/pagination'
 
 const Drive = () => {
     const [files, setFiles] = useState([])
@@ -15,8 +16,6 @@ const Drive = () => {
 
     const [uploadQueue, setUploadQueue] = useState([])
     const [uploading, setUploading] = useState(false)
-    const [currentUpload, setCurrentUpload] = useState(null)
-    const [progress, setProgress] = useState(0)
 
     useEffect(() => {
         fetchFiles(currentPage)
@@ -42,43 +41,39 @@ const Drive = () => {
     const uploadNext = useCallback(async () => {
         if (uploadQueue.length === 0) {
             setUploading(false)
-            setCurrentUpload(null)
-            setProgress(0)
             fetchFiles(currentPage)
             return
         }
 
         const file = uploadQueue[0]
-        setCurrentUpload(file)
         setUploading(true)
 
         const formData = new FormData()
         formData.append('file', file)
 
-        try {
-            await axiosInstance.post(
-                '/files',
-                formData,
-                {
+        const response = new Promise(async (resolve, reject) => {
+            try {
+                const res = await axiosInstance.post('/files', formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                     },
-                },
-                {
-                    onUploadProgress: (e) => {
-                        const percent = Math.round((e.loaded * 100) / e.total)
-                        setProgress(percent)
-                    },
-                },
-            )
+                })
+                if (res.data.error) {
+                    return reject(res.data.error)
+                }
+                resolve(res.data)
+            } catch (error) {
+                reject(error)
+            } finally {
+                setUploadQueue((prev) => prev.slice(1))
+            }
+        })
 
-            toast.success(`${file.name} uploaded`)
-        } catch {
-            toast.error(`Failed to upload ${file.name}`)
-        } finally {
-            setUploadQueue((prev) => prev.slice(1))
-            setProgress(0)
-        }
+        toast.promise(response, {
+            pending: `Uploading ${file.name}...`,
+            success: `${file.name} uploaded successfully`,
+            error: `Failed to upload ${file.name}`,
+        })
     }, [uploadQueue, currentPage])
 
     useEffect(() => {
@@ -91,6 +86,13 @@ const Drive = () => {
         e.preventDefault()
         const droppedFiles = Array.from(e.dataTransfer.files)
         setUploadQueue((prev) => [...prev, ...droppedFiles])
+    }
+
+    const getSize = (size) => {
+        if (size < 1024) return `${size} B`
+        else if (size < 1024 * 1024) return `${(size / 1024).toFixed(2)} KB`
+        else if (size < 1024 * 1024 * 1024) return `${(size / (1024 * 1024)).toFixed(2)} MB`
+        else return `${(size / (1024 * 1024 * 1024)).toFixed(2)} GB`
     }
 
     const preventDefault = (e) => e.preventDefault()
@@ -114,10 +116,8 @@ const Drive = () => {
                     <CCol>
                         <h1>Drive</h1>
                         <span>
-                            {files.length.toLocaleString()} Files -{' '}
-                            {(totalSize / (1024 * 1024)).toFixed(2)}
-                        </span>{' '}
-                        MB
+                            {files.length.toLocaleString()} Files · {getSize(totalSize)}
+                        </span>
                     </CCol>
                 </CRow>
 
@@ -192,7 +192,7 @@ const Drive = () => {
                                         <div
                                             style={{ fontSize: 12, marginTop: 6, color: '#9ca3af' }}
                                         >
-                                            {(file.file_size / (1024 * 1024)).toFixed(2)} MB ·{' '}
+                                            {getSize(file.file_size)} ·{' '}
                                             {new Date(file.created_at).toLocaleDateString()}
                                         </div>
 
@@ -213,60 +213,15 @@ const Drive = () => {
                                 </CCol>
                             ))}
                         </CRow>
+                        <AppPagination
+                            currentPage={currentPage}
+                            setCurrentPage={setCurrentPage}
+                            totalPages={totalPages}
+                            setTotalPages={setTotalPages}
+                        />
                     </>
                 )}
             </div>
-
-            {currentUpload && (
-                <div
-                    style={{
-                        position: 'fixed',
-                        bottom: 20,
-                        right: 20,
-                        background: '#1f2937',
-                        color: '#fff',
-                        padding: '12px 16px',
-                        borderRadius: 8,
-                        width: 260,
-                        boxShadow: '0 10px 25px rgba(0,0,0,.2)',
-                        zIndex: 9999,
-                    }}
-                >
-                    <strong>Uploading</strong>
-                    <div
-                        style={{
-                            display: '-webkit-box',
-                            WebkitLineClamp: 2,
-                            WebkitBoxOrient: 'vertical',
-                            overflow: 'hidden',
-                            wordBreak: 'break-word',
-                        }}
-                    >
-                        {currentUpload.name}
-                    </div>
-
-                    <div
-                        style={{
-                            height: 6,
-                            background: '#374151',
-                            borderRadius: 4,
-                            marginTop: 8,
-                        }}
-                    >
-                        <div
-                            style={{
-                                height: '100%',
-                                width: `${progress}%`,
-                                background: '#22c55e',
-                                borderRadius: 4,
-                                transition: 'width .2s',
-                            }}
-                        />
-                    </div>
-
-                    <div style={{ fontSize: 12, marginTop: 6 }}>{progress}%</div>
-                </div>
-            )}
         </>
     )
 }
