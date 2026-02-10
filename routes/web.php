@@ -52,6 +52,7 @@ Route::group(['prefix' => 'api'], function () {
 
         Route::prefix('files')->group(function () {
             Route::get('/', [DriveController::class, 'getFiles']);
+            Route::get('/{id}', [DriveController::class, 'getFile']);
             Route::post('/', [DriveController::class, 'uploadFile']);
         });
 

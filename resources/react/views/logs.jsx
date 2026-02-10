@@ -76,6 +76,7 @@ const Logs = () => {
                             <CListGroup>
                                 {files.map((file) => (
                                     <CListGroupItem
+                                        className="border-0 rounded"
                                         key={file.name}
                                         active={file.name === selectedFile}
                                         onClick={() => fetchLogContent(file.name)}
@@ -92,11 +93,10 @@ const Logs = () => {
                 <CCol md={9}>
                     <CCard>
                         <CCardBody
+                            className="bg-body-secondary"
                             style={{
                                 maxHeight: '80vh',
                                 overflow: 'auto',
-                                background: '#0f172a',
-                                color: '#e5e7eb',
                                 fontFamily: 'monospace',
                                 fontSize: '13px',
                             }}

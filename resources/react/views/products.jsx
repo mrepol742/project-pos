@@ -139,7 +139,7 @@ const Products = () => {
                                     <CTableDataCell>
                                         {product.is_active ? 'Yes' : 'No'}
                                     </CTableDataCell>
-                                    <CTableDataCell>{product.category.name}</CTableDataCell>
+                                    <CTableDataCell>{product.category?.name ?? ""}</CTableDataCell>
                                     <CTableDataCell>
                                         <div className="d-flex">
                                             <CButton

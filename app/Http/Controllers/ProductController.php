@@ -50,7 +50,6 @@ class ProductController extends Controller
     public function createProduct(Request $request)
     {
         try {
-
             info('Creating product with data: ' . json_encode($request->all()));
             $request->validate([
                 'name' => 'required|string|max:255',
@@ -80,11 +79,16 @@ class ProductController extends Controller
                 $lastProduct = Product::orderBy('id', 'desc')->first();
                 if ($lastProduct && $lastProduct->barcode) {
                     $lastBarcode = ltrim($lastProduct->barcode, '0');
-                    $nextBarcode = str_pad((int)$lastBarcode + 1, 9, '0', STR_PAD_LEFT);
+                    $nextBarcode = str_pad((int) $lastBarcode + 1, 9, '0', STR_PAD_LEFT);
                 } else {
                     $nextBarcode = '0000000000001';
                 }
                 $request->merge(['barcode' => $nextBarcode]);
+            }
+
+            if ($request->hasFile('image')) {
+                $imagePath = $request->file('image')->store('product_images', 'public');
+                $request->merge(['image' => $imagePath]);
             }
 
             $product = Product::create($request->all());
@@ -104,9 +108,7 @@ class ProductController extends Controller
     public function getProduct(Request $request, $id)
     {
         try {
-            $product = Product::where('code', $id)
-                ->orWhere('barcode', $id)
-                ->first();
+            $product = Product::where('code', $id)->orWhere('barcode', $id)->first();
 
             return response()->json($product);
         } catch (\Exception $e) {
