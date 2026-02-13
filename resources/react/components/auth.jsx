@@ -14,7 +14,7 @@ const AppAuth = () => {
     const [isAuth, setIsAuth] = useState(null)
 
     let loc = `/login`
-    if (window.location.pathname != '/')
+    if (window.location.pathname != '/' && window.location.pathname != '/logout')
         loc = `/login?n=${window.location.pathname}${window.location.search}`
 
     const verify = async () => {
@@ -42,7 +42,7 @@ const AppAuth = () => {
             </div>
         )
 
-    if (!isAuth) return <Navigate to={loc} replace />
+    if (!isAuth && window.location.pathname !== '/logout') return <Navigate to={loc} replace />
     return <Outlet />
 }
 
