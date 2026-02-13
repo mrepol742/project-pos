@@ -17,7 +17,7 @@ class DriveController extends Controller
     public function getFiles(Request $request)
     {
         try {
-            $drives = Drive::with('user')->paginate(30);
+            $drives = Drive::with('user')->latest('updated_at')->paginate(30);
             $totalSize = Drive::sum('file_size');
 
             return response()->json([
