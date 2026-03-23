@@ -22,20 +22,44 @@ class DashboardController extends Controller
     public function getSummaryEarnings(Request $request)
     {
         try {
-            // Get sales from the last 7 days and calculate total
-            $recentSales = Sale::where('created_at', '>=', now()->subDays(7))->get();
-            $recentTotal = $recentSales->sum('total');
+            $now = now();
 
-            // Get sales from the previous 7 days (8-14 days ago) and calculate total
-            $previousSales = Sale::whereBetween('created_at', [
-                now()->subDays(14),
-                now()->subDays(7)->subSecond()
-                ])->get();
-            $previousTotal = $previousSales->sum('total');
+            $endDate = $now->copy()->addMonth()->startOfMonth();
+            $startDate = $endDate->copy()->subMonths(7);
+
+            $sales = Sale::selectRaw(
+                "
+                     TO_CHAR(created_at, 'YYYY-MM') as month,
+                     SUM(total) as total
+                 ",
+            )
+                ->whereBetween('created_at', [$startDate, $endDate])
+                ->groupBy('month')
+                ->orderBy('month')
+                ->get();
+
+            $labels = [];
+            $data = [];
+
+            for ($i = 0; $i < 7; $i++) {
+                $currentMonth = $startDate->copy()->addMonths($i);
+
+                $label = $currentMonth->format('F');
+                if ($currentMonth->year !== $now->year) {
+                    $label .= ' ' . $currentMonth->year;
+                }
+
+                $labels[] = $label;
+
+                $monthKey = $currentMonth->format('Y-m');
+                $monthData = $sales->firstWhere('month', $monthKey);
+
+                $data[] = $monthData ? (float) $monthData->total : 0;
+            }
 
             return response()->json([
-                'recent' => $recentTotal,
-                'previous' => $previousTotal,
+                'labels' => $labels,
+                'data' => $data,
             ]);
         } catch (\Exception $e) {
             Log::error('Error handling request: ' . $e->getMessage());
@@ -43,28 +67,47 @@ class DashboardController extends Controller
         }
     }
 
-    /**
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function getSummarySales(Request $request)
+    public function getOrdersOverTime(Request $request)
     {
         try {
-            // Get sales from the last 7 days and calculate total
-            $recentSales = Sale::where('created_at', '>=', now()->subDays(7))->get();
-            $recentTotal = $recentSales->sum('total');
+            $now = now();
 
-            // Get sales from the previous 7 days (8-14 days ago) and calculate total
-            $previousSales = Sale::whereBetween('created_at', [
-                now()->subDays(14),
-                now()->subDays(7)->subSecond()
-            ])->get();
-            $previousTotal = $previousSales->sum('total');
+            $endDate = $now->copy()->addMonth()->startOfMonth();
+            $startDate = $endDate->copy()->subMonths(7);
+
+            $sales = Sale::selectRaw(
+                "
+                     TO_CHAR(created_at, 'YYYY-MM') as month,
+                     COUNT(total) as total
+                 ",
+            )
+                ->whereBetween('created_at', [$startDate, $endDate])
+                ->groupBy('month')
+                ->orderBy('month')
+                ->get();
+
+            $labels = [];
+            $data = [];
+
+            for ($i = 0; $i < 7; $i++) {
+                $currentMonth = $startDate->copy()->addMonths($i);
+
+                $label = $currentMonth->format('F');
+                if ($currentMonth->year !== $now->year) {
+                    $label .= ' ' . $currentMonth->year;
+                }
+
+                $labels[] = $label;
+
+                $monthKey = $currentMonth->format('Y-m');
+                $monthData = $sales->firstWhere('month', $monthKey);
+
+                $data[] = $monthData ? (float) $monthData->total : 0;
+            }
 
             return response()->json([
-                'recent' => $recentTotal,
-                'previous' => $previousTotal,
+                'labels' => $labels,
+                'data' => $data,
             ]);
         } catch (\Exception $e) {
             Log::error('Error handling request: ' . $e->getMessage());
@@ -72,28 +115,91 @@ class DashboardController extends Controller
         }
     }
 
-    /**
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function getSummaryAverageItems(Request $request)
+    public function getAverageOrderValue(Request $request)
     {
         try {
-            // Get sales from the last 7 days and calculate total
-            $recentSales = Sale::where('created_at', '>=', now()->subDays(7))->get();
-            $recentTotal = $recentSales->sum('total_items');
+            $now = now();
 
-            // Get sales from the previous 7 days (8-14 days ago) and calculate total
-            $previousSales = Sale::whereBetween('created_at', [
-                now()->subDays(14),
-                now()->subDays(7)->subSecond()
-            ])->get();
-            $previousTotal = $previousSales->sum('total_items');
+            $endDate = $now->copy()->addMonth()->startOfMonth();
+            $startDate = $endDate->copy()->subMonths(7);
+
+            $sales = Sale::selectRaw(
+                "
+                       TO_CHAR(created_at, 'YYYY-MM') as month,
+                        SUM(total) / NULLIF(COUNT(*), 0) as total
+                 ",
+            )
+                ->whereBetween('created_at', [$startDate, $endDate])
+                ->groupBy('month')
+                ->orderBy('month')
+                ->get();
+
+            $labels = [];
+            $data = [];
+
+            for ($i = 0; $i < 7; $i++) {
+                $currentMonth = $startDate->copy()->addMonths($i);
+
+                $label = $currentMonth->format('F');
+                if ($currentMonth->year !== $now->year) {
+                    $label .= ' ' . $currentMonth->year;
+                }
+
+                $labels[] = $label;
+
+                $monthKey = $currentMonth->format('Y-m');
+                $monthData = $sales->firstWhere('month', $monthKey);
+
+                $data[] = $monthData ? (float) $monthData->total : 0;
+            }
 
             return response()->json([
-                'recent' => $recentTotal,
-                'previous' => $previousTotal,
+                'labels' => $labels,
+                'data' => $data,
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error handling request: ' . $e->getMessage());
+            return response()->json(['error' => 'Internal server error'], 500);
+        }
+    }
+
+    public function getDailySales(Request $request)
+    {
+        try {
+            $now = now();
+
+            $startDate = $now->copy()->subDays(6)->startOfDay();
+            $endDate = $now->copy()->endOfDay();
+
+            $sales = Sale::selectRaw(
+                "
+                       TO_CHAR(created_at, 'YYYY-MM-DD') as day,
+                       SUM(total) as total
+                 ",
+            )
+                ->whereBetween('created_at', [$startDate, $endDate])
+                ->groupBy('day')
+                ->orderBy('day')
+                ->get();
+
+            $labels = [];
+            $data = [];
+
+            for ($i = 0; $i < 7; $i++) {
+                $currentDay = $startDate->copy()->addDays($i);
+
+                $label = $currentDay->format('M d');
+                $labels[] = $label;
+
+                $dayKey = $currentDay->format('Y-m-d');
+                $dayData = $sales->firstWhere('day', $dayKey);
+
+                $data[] = $dayData ? (float) $dayData->total : 0;
+            }
+
+            return response()->json([
+                'labels' => $labels,
+                'data' => $data,
             ]);
         } catch (\Exception $e) {
             Log::error('Error handling request: ' . $e->getMessage());

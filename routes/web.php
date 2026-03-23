@@ -71,12 +71,12 @@ Route::group(['prefix' => 'api'], function () {
 
         Route::prefix('dashboard')->group(function () {
             Route::get('/summary-earnings', [DashboardController::class, 'getSummaryEarnings']);
-            Route::get('/summary-sales', [DashboardController::class, 'getSummarySales']);
-            Route::get('/summary-avg-items', [
+            Route::get('/orders-over-time', [DashboardController::class, 'getOrdersOverTime']);
+            Route::get('/average-order-value', [
                 DashboardController::class,
-                'getSummaryAverageItems',
+                'getAverageOrderValue',
             ]);
-            Route::get('/summary-total', [DashboardController::class, 'getSummaryTotal']);
+            Route::get('/daily-sales', [DashboardController::class, 'getDailySales']);
             Route::get('/latest-transactions', [
                 DashboardController::class,
                 'getLatestTransactions',
