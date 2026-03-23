@@ -21,6 +21,17 @@ import axiosInstance from '../services/axios'
 const Users = () => {
     const navigate = useNavigate()
     const [users, setUsers] = useState([])
+    const [user, setUser] = useState({
+        name: '',
+        email: '',
+        phone: '',
+        address: '',
+        username: '',
+        password: '',
+        status: '',
+        role: '',
+        type: 'add',
+    })
     const [currentPage, setCurrentPage] = useState(1)
     const [totalPages, setTotalPages] = useState(0)
     const [itemCount, setItemCount] = useState(0)
@@ -55,6 +66,29 @@ const Users = () => {
         window.open('/api/export/users', '_blank')
     }
 
+    const handleAdd = () => {
+        setUser({
+            name: '',
+            email: '',
+            phone: '',
+            address: '',
+            username: '',
+            password: '',
+            status: '',
+            role: '',
+            type: 'add',
+        })
+        setShowAppModal(true)
+    }
+
+    const handleEdit = (user) => {
+        setUser({
+            ...user,
+            type: 'edit',
+        })
+        setShowAppModal(true)
+    }
+
     return (
         <div>
             <Helmet>
@@ -66,7 +100,15 @@ const Users = () => {
                     setShowAppModal,
                 }}
             >
-                {({ onClose }) => <User onCancel={onClose} />}
+                {({ onClose }) => (
+                    <User
+                        user={user}
+                        setUser={setUser}
+                        onCancel={onClose}
+                        fetchUsers={fetchUsers}
+                        setShowAppModal={setShowAppModal}
+                    />
+                )}
             </AppModal>
             <div className="d-flex justify-content-between align-items-center mb-3">
                 <div>
@@ -82,7 +124,7 @@ const Users = () => {
                     >
                         Export
                     </CButton>
-                    <CButton size="sm" color="primary" onClick={() => setShowAppModal(true)}>
+                    <CButton size="sm" color="primary" onClick={() => handleAdd()}>
                         Add
                     </CButton>
                 </div>
@@ -127,7 +169,7 @@ const Users = () => {
                                             <CButton
                                                 size="sm"
                                                 color="primary"
-                                                onClick={() => alert(`Edit ${user.name}`)}
+                                                onClick={() => handleEdit(user)}
                                             >
                                                 Edit
                                             </CButton>

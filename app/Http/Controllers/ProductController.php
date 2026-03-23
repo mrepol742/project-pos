@@ -50,7 +50,6 @@ class ProductController extends Controller
     public function createProduct(Request $request)
     {
         try {
-            info('Creating product with data: ' . json_encode($request->all()));
             $request->validate([
                 'name' => 'required|string|max:255',
                 'code' => 'required|string|max:255',
@@ -94,6 +93,48 @@ class ProductController extends Controller
             $product = Product::create($request->all());
 
             return response()->json($product, 201);
+        } catch (\Exception $e) {
+            Log::error('Error handling request: ' . $e->getMessage());
+            return response()->json(['error' => 'Internal server error'], 500);
+        }
+    }
+
+    /**
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function updateProduct(Request $request, $id)
+    {
+        try {
+            $product = Product::findOrFail($id);
+
+            $request->validate([
+                'name' => 'sometimes|required|string|max:255',
+                'code' => 'sometimes|required|string|max:255|unique:products,code,' . $id,
+                'barcode' => 'nullable|string|max:255|unique:products,barcode,' . $id,
+                'unit_measurement' => 'sometimes|required|string|max:255',
+                'is_active' => 'sometimes|boolean',
+                'default_quantity' => 'sometimes|boolean',
+                'category_id' => 'nullable|integer|exists:categories,id',
+                'age_restriction' => 'nullable|integer|min:0',
+                'description' => 'nullable|string',
+                'taxes' => 'nullable|integer|min:0',
+                'cost_price' => 'sometimes|required|integer|min:0',
+                'markup' => 'sometimes|required|integer|min:0',
+                'sale_price' => 'sometimes|required|integer|min:0',
+                'color' => 'nullable|string|max:255',
+                'image' => 'nullable|image|max:2048', // 2MB Max
+            ]);
+
+            if ($request->hasFile('image')) {
+                $imagePath = $request->file('image')->store('product_images', 'public');
+                $request->merge(['image' => $imagePath]);
+            }
+
+            $product->update($request->all());
+
+            return response()->json($product);
         } catch (\Exception $e) {
             Log::error('Error handling request: ' . $e->getMessage());
             return response()->json(['error' => 'Internal server error'], 500);

@@ -21,6 +21,11 @@ import axiosInstance from '../services/axios'
 
 const Categories = () => {
     const [categories, setCategories] = useState([])
+    const [category, setCategory] = useState({
+        name: '',
+        description: '',
+        type: 'add',
+    })
     const [currentPage, setCurrentPage] = useState(1)
     const [totalPages, setTotalPages] = useState(0)
     const [showAppModal, setShowAppModal] = useState(false)
@@ -49,6 +54,23 @@ const Categories = () => {
         }
     }
 
+    const handleAdd = () => {
+        setCategory({
+            name: '',
+            description: '',
+            type: 'add',
+        })
+        setShowAppModal(true)
+    }
+
+    const handleEdit = (category) => {
+        setCategory({
+            ...category,
+            type: 'edit',
+        })
+        setShowAppModal(true)
+    }
+
     return (
         <div>
             <Helmet>
@@ -57,7 +79,7 @@ const Categories = () => {
             <div className="d-flex justify-content-between align-items-center mb-3">
                 <h1>Categories</h1>
                 <div>
-                    <CButton color="primary" onClick={() => setShowAppModal(true)}>
+                    <CButton color="primary" onClick={() => handleAdd()}>
                         <FontAwesomeIcon icon={faAdd} /> Add Category
                     </CButton>
                 </div>
@@ -68,7 +90,15 @@ const Categories = () => {
                     setShowAppModal,
                 }}
             >
-                {({ onClose }) => <Category onCancel={onClose} />}
+                {({ onClose }) => (
+                    <Category
+                        category={category}
+                        setCategory={setCategory}
+                        onCancel={onClose}
+                        fetchCategories={fetchCategories}
+                        setShowAppModal={setShowAppModal}
+                    />
+                )}
             </AppModal>
             {loading && (
                 <div className="d-flex justify-content-center align-items-center">
@@ -97,7 +127,25 @@ const Categories = () => {
                                 <CTableRow key={category.id}>
                                     <CTableDataCell>{category.name}</CTableDataCell>
                                     <CTableDataCell>{category.description}</CTableDataCell>
-                                    <CTableDataCell></CTableDataCell>
+                                    <CTableDataCell>
+                                        <div className="d-flex">
+                                            <CButton
+                                                size="sm"
+                                                color="primary"
+                                                onClick={() => handleEdit(category)}
+                                            >
+                                                <FontAwesomeIcon icon={faEdit} />
+                                            </CButton>
+                                            <CButton
+                                                size="sm"
+                                                color="danger"
+                                                onClick={() => alert(`Delete ${category.name}`)}
+                                                className="ms-2 text-white"
+                                            >
+                                                <FontAwesomeIcon icon={faTrash} />
+                                            </CButton>
+                                        </div>
+                                    </CTableDataCell>
                                 </CTableRow>
                             ))}
                         </CTableBody>

@@ -23,6 +23,24 @@ import axiosInstance from '../services/axios'
 const Products = () => {
     const navigate = useNavigate()
     const [products, setProducts] = useState([])
+    const [product, setProduct] = useState({
+        name: '',
+        code: '',
+        barcode: '',
+        unit_measurement: '',
+        category_id: 0,
+        is_active: true,
+        default_quantity: true,
+        age_restriction: 0,
+        description: '',
+        taxes: 0,
+        cost_price: 0,
+        markup: 0,
+        sale_price: 0,
+        color: '',
+        image: null,
+        type: 'add',
+    })
     const [currentPage, setCurrentPage] = useState(1)
     const [totalPages, setTotalPages] = useState(0)
     const [itemCount, setItemCount] = useState(0)
@@ -59,6 +77,36 @@ const Products = () => {
         window.open('/api/export/products', '_blank')
     }
 
+    const handleAdd = () => {
+        setProduct({
+            name: '',
+            code: '',
+            barcode: '',
+            unit_measurement: '',
+            category_id: 0,
+            is_active: true,
+            default_quantity: true,
+            age_restriction: 0,
+            description: '',
+            taxes: 0,
+            cost_price: 0,
+            markup: 0,
+            sale_price: 0,
+            color: '',
+            image: null,
+            type: 'add',
+        })
+        setShowAppModal(true)
+    }
+
+    const handleEdit = (product) => {
+        setProduct({
+            ...product,
+            type: 'edit',
+        })
+        setShowAppModal(true)
+    }
+
     return (
         <div>
             <Helmet>
@@ -70,7 +118,15 @@ const Products = () => {
                     setShowAppModal,
                 }}
             >
-                <Product />
+                {({ onClose }) => (
+                    <Product
+                        product={product}
+                        setProduct={setProduct}
+                        onCancel={onClose}
+                        fetchProducts={fetchProducts}
+                        setShowAppModal={setShowAppModal}
+                    />
+                )}
             </AppModal>
             <div className="d-flex justify-content-between align-items-center mb-3">
                 <div>
@@ -94,7 +150,7 @@ const Products = () => {
                     >
                         Export
                     </CButton>
-                    <CButton size="sm" color="primary" onClick={() => setShowAppModal(true)}>
+                    <CButton size="sm" color="primary" onClick={() => handleAdd()}>
                         Add
                     </CButton>
                 </div>
@@ -139,13 +195,13 @@ const Products = () => {
                                     <CTableDataCell>
                                         {product.is_active ? 'Yes' : 'No'}
                                     </CTableDataCell>
-                                    <CTableDataCell>{product.category?.name ?? ""}</CTableDataCell>
+                                    <CTableDataCell>{product.category?.name ?? ''}</CTableDataCell>
                                     <CTableDataCell>
                                         <div className="d-flex">
                                             <CButton
                                                 size="sm"
                                                 color="primary"
-                                                onClick={() => alert(`Edit ${product.name}`)}
+                                                onClick={() => handleEdit(product)}
                                             >
                                                 <FontAwesomeIcon icon={faEdit} />
                                             </CButton>

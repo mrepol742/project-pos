@@ -13,16 +13,11 @@ import {
 import { Helmet } from 'react-helmet'
 import { toast } from 'react-toastify'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPlus } from '@fortawesome/free-solid-svg-icons'
+import { faEdit, faPlus } from '@fortawesome/free-solid-svg-icons'
 import PropTypes from 'prop-types'
 import axiosInstance from '../../services/axios'
 
-const NewCategory = ({ onCancel }) => {
-    const [category, setCategory] = useState({
-        name: '',
-        description: '',
-    })
-
+const NewCategory = ({ category, setCategory, onCancel, fetchCategories, setShowAppModal }) => {
     const handleChange = (e) => {
         const { id, value } = e.target
         setCategory((prevProduct) => ({
@@ -33,27 +28,53 @@ const NewCategory = ({ onCancel }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault()
+        if (category.type === 'add')
+            return axiosInstance
+                .put('/categories', category)
+                .then((response) => {
+                    if (response.data.error) return toast.error(response.data.error)
+                    toast.success(`${category.name} created successfully`)
+                    setCategory({
+                        name: '',
+                        description: '',
+                        type: 'add',
+                    })
+                    fetchCategories(1)
+                    setShowAppModal(false)
+                })
+                .catch((error) => {
+                    console.error('Error creating category:', error)
+                    toast.error(`Failed to create category ${category.name}`)
+                })
+
         axiosInstance
-            .post('/categories', category)
+            .patch(`/categories/${category.id}`, category)
             .then((response) => {
                 if (response.data.error) return toast.error(response.data.error)
-                toast.success(`${category.name} created successfully`)
+                toast.success(`${category.name} updated successfully`)
                 setCategory({
                     name: '',
                     description: '',
+                    type: 'add',
                 })
+                fetchCategories(1)
+                setShowAppModal(false)
             })
             .catch((error) => {
-                console.error('Error creating category:', error)
-                toast.error(`Failed to create category ${category.name}`)
+                console.error('Error updating category:', error)
+                toast.error(`Failed to update category ${category.name}`)
             })
     }
 
     return (
         <CForm onSubmit={handleSubmit}>
+            {category.name}
             <div className="d-flex align-items-center mb-3 fs-5">
-                <FontAwesomeIcon icon={faPlus} className="me-2" />
-                New Category
+                <FontAwesomeIcon
+                    icon={category.type === 'add' ? faPlus : faEdit}
+                    className="me-2"
+                />
+                {category.type === 'add' ? 'New Category' : 'Edit Category'}
             </div>
             <CFormInput
                 type="text"
@@ -61,6 +82,7 @@ const NewCategory = ({ onCancel }) => {
                 floatingClassName="mb-3"
                 floatingLabel="Name"
                 onChange={handleChange}
+                vaue={category.name}
                 placeholder=""
                 required
             />
@@ -70,6 +92,7 @@ const NewCategory = ({ onCancel }) => {
                 floatingClassName="mb-3"
                 floatingLabel="Description"
                 onChange={handleChange}
+                value={category.address}
                 placeholder=""
                 required
             />
@@ -78,7 +101,7 @@ const NewCategory = ({ onCancel }) => {
                     Cancel
                 </CButton>
                 <CButton color="primary" size="sm" type="submit">
-                    Add Category
+                    {category.type === 'add' ? 'Create' : 'Update'}
                 </CButton>
             </div>
         </CForm>
@@ -88,5 +111,14 @@ const NewCategory = ({ onCancel }) => {
 export default NewCategory
 
 NewCategory.propTypes = {
+    category: PropTypes.shape({
+        id: PropTypes.number,
+        name: PropTypes.string,
+        description: PropTypes.string,
+        type: PropTypes.string,
+    }).isRequired,
+    setCategory: PropTypes.func.isRequired,
     onCancel: PropTypes.func.isRequired,
+    fetchCategories: PropTypes.func.isRequired,
+    setShowAppModal: PropTypes.func.isRequired,
 }
