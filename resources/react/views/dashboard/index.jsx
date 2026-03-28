@@ -180,14 +180,10 @@ const Dashboard = () => {
                 <CCol xs={12} md={4} className="mb-3">
                     <LatestTransaction />
                 </CCol>
-                <CCol xs={12} md={7} className="mb-3">
-                    <CCard className="border-0">
-                        <CCardBody>
-                            <PurchaseActivity />
-                            <hr />
-                            <EarningsActivity />
-                        </CCardBody>
-                    </CCard>
+
+                <CCol xs={12} md={8} className="d-flex flex-column gap-3">
+                    <PurchaseActivity />
+                    <EarningsActivity />
                 </CCol>
             </CRow>
         </div>

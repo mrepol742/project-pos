@@ -176,8 +176,8 @@ const Products = () => {
                                 <CTableHeaderCell scope="col">Code</CTableHeaderCell>
                                 <CTableHeaderCell scope="col">Barcode</CTableHeaderCell>
                                 <CTableHeaderCell scope="col">Quantity</CTableHeaderCell>
-                                <CTableHeaderCell scope="col">Cost Price</CTableHeaderCell>
-                                <CTableHeaderCell scope="col">Sale Price</CTableHeaderCell>
+                                <CTableHeaderCell scope="col" className="text-nowrap">Cost Price</CTableHeaderCell>
+                                <CTableHeaderCell scope="col" className="text-nowrap">Sale Price</CTableHeaderCell>
                                 <CTableHeaderCell scope="col">Stock</CTableHeaderCell>
                                 <CTableHeaderCell scope="col">Category</CTableHeaderCell>
                                 <CTableHeaderCell scope="col"></CTableHeaderCell>
