@@ -82,7 +82,7 @@ const Login = () => {
                                         <CFormInput
                                             className="border-0"
                                             onChange={handleChange}
-                                            value={formData.login}
+                                            value={formData}
                                             type="text"
                                             name="login"
                                             placeholder="Username or Email"
