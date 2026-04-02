@@ -35,6 +35,22 @@ jobs:
   server-build:
     runs-on: ubuntu-latest
 
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: project_pos
+          MYSQL_USER: project_pos
+          MYSQL_PASSWORD: secret_password_of_root
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping --silent"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+
     steps:
     - uses: actions/checkout@v4
 
@@ -42,6 +58,8 @@ jobs:
       uses: shivammathur/setup-php@v2
       with:
         php-version: '8.4'
+        extensions: mbstring, bcmath, pdo_mysql
+        coverage: none
 
     - name: Validate composer.json and composer.lock
       run: composer validate --strict
@@ -57,6 +75,28 @@ jobs:
 
     - name: Install dependencies
       run: composer install --prefer-dist --no-progress
+
+    - name: Copy .env
+      run: cp .env.example .env
+
+    - name: Configure database
+      run: |
+        echo "DB_CONNECTION=mysql" >> .env
+        echo "DB_HOST=127.0.0.1" >> .env
+        echo "DB_PORT=3306" >> .env
+        echo "DB_DATABASE=project_pos" >> .env
+        echo "DB_USERNAME=project_pos" >> .env
+        echo "DB_PASSWORD=secret_password_of_root" >> .env
+        php artisan key:generate
+
+    - name: Wait for MySQL
+      run: |
+        until mysql -h 127.0.0.1 -u project_pos -psecret_password_of_root -e 'select 1'; do
+          sleep 1
+        done
+
+    - name: Run migrations
+      run: php artisan migrate --force
 
     # Add a test script to composer.json, for instance: "test": "vendor/bin/phpunit"
     # Docs: https://getcomposer.org/doc/articles/scripts.md
