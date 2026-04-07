@@ -17,13 +17,14 @@ import { cilLockLocked, cilUser } from '@coreui/icons'
 import { toast } from 'react-toastify'
 import cookies from 'js-cookie'
 import axiosInstance from '../../services/axios'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
 
 const Login = () => {
     const [formData, setFormData] = useState({
         login: '',
         password: '',
     })
-    const [loading, setLoading] = useState(false)
 
     const handleChange = (e) => {
         const { name, value } = e.target
@@ -82,8 +83,8 @@ const Login = () => {
                                         <CFormInput
                                             className="border-0"
                                             onChange={handleChange}
-                                            value={formData}
-                                            type="text"
+                                            value={formData.login}
+                                            type="email"
                                             name="login"
                                             placeholder="Username or Email"
                                         />
@@ -107,11 +108,11 @@ const Login = () => {
                                         >
                                             {showPassword ? (
                                                 <span role="img" aria-label="Hide password">
-                                                    🙈
+                                                    <FontAwesomeIcon icon={faEyeSlash} />
                                                 </span>
                                             ) : (
                                                 <span role="img" aria-label="Show password">
-                                                    👁️
+                                                    <FontAwesomeIcon icon={faEye} />
                                                 </span>
                                             )}
                                         </CInputGroupText>
