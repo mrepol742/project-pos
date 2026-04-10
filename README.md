@@ -1,5 +1,12 @@
-# Project POS [![Build CI](https://github.com/mrepol742/project-pos/actions/workflows/build.yml/badge.svg)](https://github.com/mrepol742/project-pos/actions/workflows/build.yml)
+# Project POS 
+
+[![Build CI](https://github.com/mrepol742/project-pos/actions/workflows/build.yml/badge.svg)](https://github.com/mrepol742/project-pos/actions/workflows/build.yml)
+
 A lightweight, web-based and offline-capable POS system built for flawless performance, supporting multi-department roles and full functionality.
+
+> ⚠️ **Warning:**
+> This repository is maintained as `project-pos`, a fork of the original `point-of-sale-system` intership project.  
+> Now that the project has fulfilled its original purpose, development continues here under a new license and project direction.  
 
 ## Pre-requisites
 
