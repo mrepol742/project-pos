@@ -1,5 +1,5 @@
-import React, { useEffect, useRef } from 'react'
-import { NavLink } from 'react-router-dom'
+import React, { useEffect, useRef, useState } from 'react'
+import { NavLink, useLocation } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import {
     CContainer,
@@ -34,9 +34,30 @@ import Product from '../views/modals/product'
 const AppHeader = () => {
     const headerRef = useRef()
     const { colorMode, setColorMode } = useColorModes('coreui-free-react-admin-template-theme')
-    const [showAppModal, setShowAppModal] = React.useState(false)
+    const [showAppModal, setShowAppModal] = useState(false)
     const dispatch = useDispatch()
     const sidebarShow = useSelector((state) => state.sidebarShow)
+    const location = useLocation()
+    const [product, setProduct] = useState({
+        name: '',
+        code: '',
+        barcode: '',
+        unit_measurement: '',
+        category_id: 0,
+        is_active: true,
+        default_quantity: true,
+        age_restriction: 0,
+        description: '',
+        taxes: 0,
+        cost_price: 0,
+        markup: 0,
+        sale_price: 0,
+        color: '',
+        image: null,
+        type: 'add',
+    })
+
+    const isProductsPage = /^\/products(\/.*)?$/.test(location.pathname)
 
     useEffect(() => {
         document.addEventListener('scroll', () => {
@@ -59,11 +80,13 @@ const AppHeader = () => {
                         <CIcon icon={cilMenu} size="lg" />
                     </CHeaderToggler>
                     <CHeaderNav className="me-auto">
-                        <CNavItem>
-                            <CNavLink href="#" onClick={() => setShowAppModal(true)}>
-                                <FontAwesomeIcon icon={faAdd} size="lg" />
-                            </CNavLink>
-                        </CNavItem>
+                        {!isProductsPage && (
+                            <CNavItem>
+                                <CNavLink href="#" onClick={() => setShowAppModal(true)}>
+                                    <FontAwesomeIcon icon={faAdd} size="lg" />
+                                </CNavLink>
+                            </CNavItem>
+                        )}
                     </CHeaderNav>
                     <CHeaderNav className="ms-auto">
                         <CNavItem>
@@ -96,7 +119,14 @@ const AppHeader = () => {
                     setShowAppModal,
                 }}
             >
-                {({ onClose }) => <Product onCancel={onClose} />}
+                {({ onClose }) => (
+                    <Product
+                        product={product}
+                        setProduct={setProduct}
+                        onCancel={onClose}
+                        setShowAppModal={setShowAppModal}
+                    />
+                )}
             </AppModal>
         </>
     )

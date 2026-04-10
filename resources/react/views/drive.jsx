@@ -61,6 +61,7 @@ const Drive = () => {
                 if (res.data.error) {
                     return reject(res.data.error)
                 }
+                fetchFiles(currentPage)
                 resolve(res.data)
             } catch (error) {
                 reject(error)

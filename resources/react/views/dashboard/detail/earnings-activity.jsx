@@ -1,6 +1,14 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { getStyle } from '@coreui/utils'
-import { CDropdown, CDropdownItem, CDropdownMenu, CDropdownToggle } from '@coreui/react'
+import {
+    CCard,
+    CCardHeader,
+    CCardBody,
+    CDropdown,
+    CDropdownItem,
+    CDropdownMenu,
+    CDropdownToggle,
+} from '@coreui/react'
 import { CChart } from '@coreui/react-chartjs'
 
 export const EarningsActivity = () => {
@@ -118,30 +126,35 @@ export const EarningsActivity = () => {
     }
 
     return (
-        <>
-            <div className="d-flex justify-content-between">
-                <h6>Sales activity</h6>
-                <CDropdown>
-                    <CDropdownToggle color="secondary" className="text-capitalize">
-                        {storeActivityDropdown}
-                    </CDropdownToggle>
-                    <CDropdownMenu>
-                        <CDropdownItem onClick={(e) => setStoreActivityDropdown('daily')}>
-                            Daily
-                        </CDropdownItem>
-                        <CDropdownItem onClick={(e) => setStoreActivityDropdown('weekly')}>
-                            Weekly
-                        </CDropdownItem>
-                        <CDropdownItem onClick={(e) => setStoreActivityDropdown('monthly')}>
-                            Monthly
-                        </CDropdownItem>
-                        <CDropdownItem onClick={(e) => setStoreActivityDropdown('yearly')}>
-                            Yearly
-                        </CDropdownItem>
-                    </CDropdownMenu>
-                </CDropdown>
-            </div>
-            <CChart type="line" data={data} options={options} ref={chartRef} />
-        </>
+        <CCard className="border-0">
+            <CCardHeader className="d-flex justify-content-between align-items-center">
+                <h6 className="mb-0">Sales Activity</h6>
+                <div className="d-flex">
+                    <CDropdown>
+                        <CDropdownToggle color="secondary" className="text-capitalize">
+                            {storeActivityDropdown}
+                        </CDropdownToggle>
+                        <CDropdownMenu>
+                            <CDropdownItem onClick={(e) => setStoreActivityDropdown('daily')}>
+                                Daily
+                            </CDropdownItem>
+                            <CDropdownItem onClick={(e) => setStoreActivityDropdown('weekly')}>
+                                Weekly
+                            </CDropdownItem>
+                            <CDropdownItem onClick={(e) => setStoreActivityDropdown('monthly')}>
+                                Monthly
+                            </CDropdownItem>
+                            <CDropdownItem onClick={(e) => setStoreActivityDropdown('yearly')}>
+                                Yearly
+                            </CDropdownItem>
+                        </CDropdownMenu>
+                    </CDropdown>
+                </div>
+            </CCardHeader>
+
+            <CCardBody>
+                <CChart type="line" data={data} options={options} ref={chartRef} />
+            </CCardBody>
+        </CCard>
     )
 }

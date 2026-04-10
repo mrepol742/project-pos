@@ -82,4 +82,56 @@ class UserController extends Controller
             return response()->json(['error' => 'Internal server error'], 500);
         }
     }
+
+    /**
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function updateUser(Request $request, $id)
+    {
+        try {
+            $user = User::find($id);
+            if (!$user) {
+                return response()->json(['message' => 'User not found'], 404);
+            }
+
+            $request->validate([
+                'name' => 'sometimes|required|string|max:255',
+                'username' => 'sometimes|required|string|max:255|unique:users,username,' . $id,
+                'email' => 'sometimes|required|email|max:255|unique:users,email,' . $id,
+                'phone' => 'nullable|string|max:255',
+                'address' => 'nullable|string|max:255',
+                'role' => 'sometimes|required|string|exists:roles,name',
+                'status' => 'sometimes|required|string|in:active,inactive',
+            ]);
+
+            $user->update($request->all());
+
+            return response()->json($user);
+        } catch (\Exception $e) {
+            Log::error('Error handling request: ' . $e->getMessage());
+            return response()->json(['error' => 'Internal server error'], 500);
+        }
+    }
+
+    /**
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function deleteUser($id)
+    {
+        try {
+            $user = User::find($id);
+            if (!$user) {
+                return response()->json(['message' => 'User not found'], 404);
+            }
+
+            $user->delete();
+        } catch (\Exception $e) {
+            Log::error('Error handling request: ' . $e->getMessage());
+            return response()->json(['error' => 'Internal server error'], 500);
+        }
+    }
 }

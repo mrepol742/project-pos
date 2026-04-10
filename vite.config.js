@@ -52,15 +52,12 @@ export default defineConfig(() => {
             loader: 'jsx',
             include: /resources\/.*\.jsx?$/,
             exclude: [],
-            target: 'esnext',
         },
         optimizeDeps: {
             force: true,
-            esbuildOptions: {
-                treeShaking: true,
-                minify: true,
-                loader: {
-                    '.js': 'jsx',
+            rolldownOptions: {
+                moduleTypes: {
+                    '*.jsx': 'js',
                 },
             },
         },

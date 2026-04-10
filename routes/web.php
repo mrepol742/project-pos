@@ -17,11 +17,16 @@ Route::group(['prefix' => 'api'], function () {
     // Global
     Route::prefix('categories')->group(function () {
         Route::get('/', [CategoryController::class, 'getCategories']);
-        Route::post('/', [CategoryController::class, 'addCategory']);
+        Route::put('/', [CategoryController::class, 'createCategory']);
+        Route::patch('/{id}', [CategoryController::class, 'updateCategory']);
+        Route::delete('/{id}', [CategoryController::class, 'deleteCategory']);
     });
 
     Route::prefix('products')->group(function () {
-        Route::post('/', [ProductController::class, 'createProduct']);
+        Route::put('/', [ProductController::class, 'createProduct']);
+        Route::patch('/{id}', [ProductController::class, 'updateProduct']);
+        Route::delete('/{id}', [ProductController::class, 'deleteProduct']);
+
         Route::post('/search', [ProductController::class, 'search']);
         Route::middleware(['verify.session:admin,super_admin'])->group(function () {
             Route::get('/all', [ProductController::class, 'getProducts']);
@@ -46,9 +51,12 @@ Route::group(['prefix' => 'api'], function () {
      * Admin and Super Admin routes
      */
     Route::middleware(['verify.session:admin,super_admin'])->group(function () {
-        Route::get('/users', [UserController::class, 'getUsers']);
         Route::get('/roles', [UserController::class, 'getRoles']);
-        Route::post('/users', [UserController::class, 'createUser']);
+
+        Route::get('/users', [UserController::class, 'getUsers']);
+        Route::put('/users', [UserController::class, 'createUser']);
+        Route::patch('/users/{id}', [UserController::class, 'updateUser']);
+        Route::delete('/users/{id}', [UserController::class, 'deleteUser']);
 
         Route::prefix('files')->group(function () {
             Route::get('/', [DriveController::class, 'getFiles']);
@@ -63,12 +71,12 @@ Route::group(['prefix' => 'api'], function () {
 
         Route::prefix('dashboard')->group(function () {
             Route::get('/summary-earnings', [DashboardController::class, 'getSummaryEarnings']);
-            Route::get('/summary-sales', [DashboardController::class, 'getSummarySales']);
-            Route::get('/summary-avg-items', [
+            Route::get('/orders-over-time', [DashboardController::class, 'getOrdersOverTime']);
+            Route::get('/average-order-value', [
                 DashboardController::class,
-                'getSummaryAverageItems',
+                'getAverageOrderValue',
             ]);
-            Route::get('/summary-total', [DashboardController::class, 'getSummaryTotal']);
+            Route::get('/daily-sales', [DashboardController::class, 'getDailySales']);
             Route::get('/latest-transactions', [
                 DashboardController::class,
                 'getLatestTransactions',

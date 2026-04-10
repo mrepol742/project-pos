@@ -16,7 +16,7 @@ class CategoryController extends Controller
      * @var int
      */
     protected $items = 15;
-    
+
     /**
      *
      * @param Request $request
@@ -30,9 +30,7 @@ class CategoryController extends Controller
             if (is_null($currentPage)) {
                 $categories = Category::orderBy('id', 'desc')->get();
 
-                return response()->json(
-                    $categories
-                );
+                return response()->json($categories);
             }
 
             $currentPage = (int) $currentPage;
@@ -56,7 +54,7 @@ class CategoryController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function addCategory(Request $request)
+    public function createCategory(Request $request)
     {
         try {
             $validator = Validator::make($request->all(), [
@@ -64,8 +62,9 @@ class CategoryController extends Controller
                 'description' => 'nullable|string|max:1000',
             ]);
 
-            if ($validator->fails())
+            if ($validator->fails()) {
                 return response()->json($validator->errors(), 422);
+            }
 
             Category::create($request->all());
             return response()->json(['message' => 'Group created successfully'], 201);
@@ -80,23 +79,25 @@ class CategoryController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function updateGroup(Request $request, $id)
+    public function updateCategory(Request $request, $id)
     {
         try {
-            $group = Category::find($id);
-            if (!$group)
-                return response()->json(['message' => 'Group not found'], 404);
+            $category = Category::find($id);
+            if (!$category) {
+                return response()->json(['message' => 'Category not found'], 404);
+            }
 
             $validator = Validator::make($request->all(), [
-                'name' => 'required|string|max:255|exists:categories,name',
+                'name' => 'required|string|max:255|unique:categories,name,' . $id,
                 'description' => 'nullable|string|max:1000',
             ]);
 
-            if ($validator->fails())
+            if ($validator->fails()) {
                 return response()->json($validator->errors(), 422);
+            }
 
-            $group->update($request->all());
-            return response()->json(['message' => 'Group updated successfully'], 200);
+            $category->update($request->all());
+            return response()->json(['message' => 'Category updated successfully'], 200);
         } catch (\Exception $e) {
             Log::error('Error handling request: ' . $e->getMessage());
             return response()->json(['error' => 'Internal server error'], 500);
@@ -108,15 +109,16 @@ class CategoryController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function deleteGroup($id)
+    public function deleteCategory(Request $request, $id)
     {
         try {
-            $group = Category::find($id);
-            if (!$group)
-                return response()->json(['message' => 'Group not found'], 404);
+            $category = Category::find($id);
+            if (!$category) {
+                return response()->json(['message' => 'Category not found'], 404);
+            }
 
-            $group->delete();
-            return response()->json(['message' => 'Group deleted successfully'], 200);
+            $category->delete();
+            return response()->json(['message' => 'Category deleted successfully'], 200);
         } catch (\Exception $e) {
             Log::error('Error handling request: ' . $e->getMessage());
             return response()->json(['error' => 'Internal server error'], 500);

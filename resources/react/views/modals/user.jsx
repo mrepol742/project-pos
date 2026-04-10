@@ -13,22 +13,12 @@ import {
 import { Helmet } from 'react-helmet'
 import { toast } from 'react-toastify'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPlus } from '@fortawesome/free-solid-svg-icons'
+import { faEdit, faPlus } from '@fortawesome/free-solid-svg-icons'
 import PropTypes from 'prop-types'
 import axiosInstance from '../../services/axios'
 
-const NewUser = ({ onCancel }) => {
+const NewUser = ({ user, setUser, onCancel, fetchUsers, setShowAppModal }) => {
     const [roles, setRoles] = useState([])
-    const [user, setUser] = useState({
-        name: '',
-        email: '',
-        phone: '',
-        address: '',
-        username: '',
-        password: '',
-        status: '',
-        role: '',
-    })
 
     const handleChange = (e) => {
         const { id, value } = e.target
@@ -48,11 +38,36 @@ const NewUser = ({ onCancel }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault()
+        if (user.type === 'add')
+            return axiosInstance
+                .put('/users', user)
+                .then((response) => {
+                    if (response.data.error) return toast.error(response.data.error)
+                    toast.success(`${user.name} created successfully`)
+                    setUser({
+                        name: '',
+                        email: '',
+                        phone: '',
+                        address: '',
+                        username: '',
+                        password: '',
+                        status: '',
+                        role: '',
+                        type: 'add',
+                    })
+                    fetchUsers(0)
+                    setShowAppModal(false)
+                })
+                .catch((error) => {
+                    console.error('Error creating user:', error)
+                    toast.error(`Failed to create user ${user.name}`)
+                })
+
         axiosInstance
-            .post('/users', user)
+            .patch(`/users/${user.id}`, user)
             .then((response) => {
                 if (response.data.error) return toast.error(response.data.error)
-                toast.success(`${user.name} created successfully`)
+                toast.success(`${user.name} updated successfully`)
                 setUser({
                     name: '',
                     email: '',
@@ -62,11 +77,14 @@ const NewUser = ({ onCancel }) => {
                     password: '',
                     status: '',
                     role: '',
+                    type: 'add',
                 })
+                fetchUsers(0)
+                setShowAppModal(false)
             })
             .catch((error) => {
-                console.error('Error creating user:', error)
-                toast.error(`Failed to create user ${user.name}`)
+                console.error('Error updating user:', error)
+                toast.error(`Failed to update user ${user.name}`)
             })
     }
 
@@ -86,8 +104,8 @@ const NewUser = ({ onCancel }) => {
     return (
         <CForm onSubmit={handleSubmit} className="p-2">
             <div className="d-flex align-items-center mb-3 fs-5">
-                <FontAwesomeIcon icon={faPlus} className="me-2" />
-                New User
+                <FontAwesomeIcon icon={user.type === 'add' ? faPlus : faEdit} className="me-2" />
+                {user.type === 'add' ? 'New User' : 'Edit User'}
             </div>
             <CRow>
                 <CCol xs={12} md={6}>
@@ -97,6 +115,7 @@ const NewUser = ({ onCancel }) => {
                         floatingClassName="mb-3"
                         floatingLabel="Name"
                         onChange={handleChange}
+                        value={user.name}
                         placeholder=""
                         required
                     />
@@ -110,17 +129,19 @@ const NewUser = ({ onCancel }) => {
                         floatingClassName="mb-3"
                         floatingLabel="Email"
                         onChange={handleChange}
+                        value={user.email}
                         placeholder=""
                         required
                     />
                 </CCol>
                 <CCol xs={12} md={6}>
                     <CFormInput
-                        type="number"
+                        type="text"
                         id="phone"
                         floatingClassName="mb-3"
                         floatingLabel="Phone"
                         onChange={handleChange}
+                        value={user.phone}
                         placeholder=""
                         required
                     />
@@ -134,6 +155,7 @@ const NewUser = ({ onCancel }) => {
                         floatingClassName="mb-3"
                         floatingLabel="Username"
                         onChange={handleChange}
+                        value={user.username}
                         placeholder=""
                         required
                     />
@@ -144,6 +166,7 @@ const NewUser = ({ onCancel }) => {
                         floatingClassName="mb-3"
                         floatingLabel="Role"
                         onChange={handleSelectChange}
+                        value={user.role}
                         options={[
                             { label: 'Select a role', value: '' },
                             ...roles.map((d) => ({
@@ -162,6 +185,7 @@ const NewUser = ({ onCancel }) => {
                         floatingClassName="mb-3"
                         floatingLabel="Status"
                         onChange={handleSelectChange}
+                        value={user.status}
                         options={[
                             { label: 'Select a status', value: '' },
                             { label: 'Active', value: 'active' },
@@ -170,24 +194,27 @@ const NewUser = ({ onCancel }) => {
                         required
                     />
                 </CCol>
-                <CCol xs={12} md={6}>
-                    <CFormInput
-                        type="text"
-                        id="password"
-                        floatingClassName="mb-3"
-                        floatingLabel="Password"
-                        onChange={handleChange}
-                        placeholder=""
-                        required
-                    />
-                </CCol>
+                {user.type === 'add' && (
+                    <CCol xs={12} md={6}>
+                        <CFormInput
+                            type="text"
+                            id="password"
+                            floatingClassName="mb-3"
+                            floatingLabel="Password"
+                            onChange={handleChange}
+                            value={user.password}
+                            placeholder=""
+                            required
+                        />
+                    </CCol>
+                )}
             </CRow>
             <div className="d-flex justify-content-end mt-3">
                 <CButton color="secondary" className="me-2" size="sm" onClick={onCancel}>
                     Cancel
                 </CButton>
                 <CButton color="primary" size="sm" type="submit">
-                    Add User
+                    {user.type === 'add' ? 'Create' : 'Update'}
                 </CButton>
             </div>
         </CForm>
@@ -197,5 +224,20 @@ const NewUser = ({ onCancel }) => {
 export default NewUser
 
 NewUser.propTypes = {
+    user: PropTypes.shape({
+        id: PropTypes.number,
+        name: PropTypes.string,
+        email: PropTypes.string,
+        phone: PropTypes.string,
+        address: PropTypes.string,
+        username: PropTypes.string,
+        password: PropTypes.string,
+        status: PropTypes.string,
+        role: PropTypes.string,
+        type: PropTypes.string,
+    }).isRequired,
+    setUser: PropTypes.func.isRequired,
+    fetchUsers: PropTypes.func.isRequired,
+    setShowAppModal: PropTypes.func.isRequired,
     onCancel: PropTypes.func.isRequired,
 }

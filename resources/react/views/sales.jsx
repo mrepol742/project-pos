@@ -79,7 +79,7 @@ const Sales = () => {
                                 <CTableHeaderCell scope="col">Amount</CTableHeaderCell>
                                 <CTableHeaderCell scope="col">Discount</CTableHeaderCell>
                                 <CTableHeaderCell scope="col">Payment</CTableHeaderCell>
-                                <CTableHeaderCell scope="col">Reference Number</CTableHeaderCell>
+                                <CTableHeaderCell scope="col" className="text-nowrap">Reference Number</CTableHeaderCell>
                                 <CTableHeaderCell scope="col"></CTableHeaderCell>
                             </CTableRow>
                         </CTableHead>

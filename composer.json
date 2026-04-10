@@ -3,6 +3,7 @@
     "name": "mrepol742/project-pos",
     "type": "project",
     "description": "",
+    "license": "proprietary",
     "require": {
         "php": "^8.2",
         "laravel/framework": "^12.0",

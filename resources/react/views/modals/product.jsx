@@ -13,29 +13,12 @@ import {
 import { Helmet } from 'react-helmet'
 import { toast } from 'react-toastify'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPlus } from '@fortawesome/free-solid-svg-icons'
+import { faEdit, faPlus } from '@fortawesome/free-solid-svg-icons'
 import PropTypes from 'prop-types'
 import axiosInstance from '../../services/axios'
 
-const Product = ({ onCancel }) => {
+const Product = ({ product, setProduct, onCancel, fetchProducts, setShowAppModal }) => {
     const [categories, setCategories] = useState([])
-    const [product, setProduct] = useState({
-        name: '',
-        code: '',
-        barcode: '',
-        unit_measurement: '',
-        category_id: 0,
-        is_active: true,
-        default_quantity: true,
-        age_restriction: 0,
-        description: '',
-        taxes: 0,
-        cost_price: 0,
-        markup: 0,
-        sale_price: 0,
-        color: '',
-        image: null,
-    })
 
     const handleChange = (e) => {
         const { id, value } = e.target
@@ -63,11 +46,43 @@ const Product = ({ onCancel }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault()
+        if (product.type === 'add')
+            return axiosInstance
+                .put('/products', product)
+                .then((response) => {
+                    if (response.data.error) return toast.error(response.data.error)
+                    toast.success(`${product.name} created successfully`)
+                    setProduct({
+                        name: '',
+                        code: '',
+                        barcode: '',
+                        unit_measurement: '',
+                        category_id: 0,
+                        is_active: true,
+                        default_quantity: true,
+                        age_restriction: 0,
+                        description: '',
+                        taxes: 0,
+                        cost_price: 0,
+                        markup: 0,
+                        sale_price: 0,
+                        color: '',
+                        image: null,
+                        type: 'add',
+                    })
+                    if (typeof fetchProducts === 'function') fetchProducts(1)
+                    if (typeof setShowAppModal === 'function') setShowAppModal(false)
+                })
+                .catch((error) => {
+                    console.error('Error creating product:', error)
+                    toast.error(`Failed to create product ${product.name}`)
+                })
+
         axiosInstance
-            .post('/products', product)
+            .patch(`/products/${product.id}`, product)
             .then((response) => {
                 if (response.data.error) return toast.error(response.data.error)
-                toast.success(`${product.name} created successfully`)
+                toast.success(`${product.name} updated successfully`)
                 setProduct({
                     name: '',
                     code: '',
@@ -84,11 +99,14 @@ const Product = ({ onCancel }) => {
                     sale_price: 0,
                     color: '',
                     image: null,
+                    type: 'add',
                 })
+                if (typeof fetchProducts === 'function') fetchProducts(1)
+                if (typeof setShowAppModal === 'function') setShowAppModal(false)
             })
             .catch((error) => {
-                console.error('Error creating product:', error)
-                toast.error(`Failed to create product ${product.name}`)
+                console.error('Error updating product:', error)
+                toast.error(`Failed to update product ${product.name}`)
             })
     }
 
@@ -125,8 +143,8 @@ const Product = ({ onCancel }) => {
     return (
         <CForm onSubmit={handleSubmit} className="p-2">
             <div className="d-flex align-items-center mb-3 fs-5">
-                <FontAwesomeIcon icon={faPlus} className="me-2" />
-                New Product
+                <FontAwesomeIcon icon={product.type === 'add' ? faPlus : faEdit} className="me-2" />
+                {product.type === 'add' ? 'New Product' : 'Edit Product'}
             </div>
             <h5>Details</h5>
             <CFormInput
@@ -135,6 +153,7 @@ const Product = ({ onCancel }) => {
                 floatingClassName="mb-3"
                 floatingLabel="Name"
                 onChange={handleChange}
+                value={product.name}
                 placeholder=""
                 required
             />
@@ -146,6 +165,7 @@ const Product = ({ onCancel }) => {
                         floatingClassName="mb-3"
                         floatingLabel="Code"
                         onChange={handleChange}
+                        value={product.code}
                         placeholder=""
                     />
                 </CCol>
@@ -156,6 +176,7 @@ const Product = ({ onCancel }) => {
                         floatingClassName="mb-3"
                         floatingLabel="Barcode"
                         onChange={handleChange}
+                        value={product.barcode}
                         placeholder=""
                     />
                 </CCol>
@@ -168,6 +189,7 @@ const Product = ({ onCancel }) => {
                         floatingClassName="mb-3"
                         floatingLabel="Unit of Measurement"
                         onChange={handleChange}
+                        value={product.unit_measurement}
                         placeholder=""
                     />
                 </CCol>
@@ -177,6 +199,7 @@ const Product = ({ onCancel }) => {
                         floatingClassName="mb-3"
                         floatingLabel="Category"
                         onChange={handleSelectChange}
+                        value={product.category_id}
                         options={[
                             ...categories.map((g) => ({
                                 label: g.name,
@@ -190,12 +213,14 @@ const Product = ({ onCancel }) => {
                 onChange={handleSwitchChange}
                 label="Active"
                 id="is_active"
+                checked={product.is_active}
                 defaultChecked
             />
             <CFormSwitch
                 onChange={handleSwitchChange}
                 label="Default Quantity"
                 id="default_quantity"
+                checked={product.default_quantity}
                 defaultChecked
             />
             <CFormInput
@@ -204,6 +229,7 @@ const Product = ({ onCancel }) => {
                 floatingClassName="mb-3"
                 floatingLabel="Age Restriction"
                 onChange={handleChange}
+                value={product.age_restriction}
                 placeholder=""
             />
             <CFormInput
@@ -212,6 +238,7 @@ const Product = ({ onCancel }) => {
                 floatingClassName="mb-3"
                 floatingLabel="Description"
                 onChange={handleChange}
+                value={product.description}
                 placeholder=""
             />
             <h5>Price</h5>
@@ -223,6 +250,7 @@ const Product = ({ onCancel }) => {
                         floatingClassName="mb-3"
                         floatingLabel="Taxes %"
                         onChange={handleChange}
+                        value={product.taxes}
                         placeholder=""
                     />
                 </CCol>
@@ -233,6 +261,7 @@ const Product = ({ onCancel }) => {
                         floatingClassName="mb-3"
                         floatingLabel="Cost"
                         onChange={handleChange}
+                        value={product.cost_price}
                         placeholder=""
                     />
                 </CCol>
@@ -245,6 +274,7 @@ const Product = ({ onCancel }) => {
                         floatingClassName="mb-3"
                         floatingLabel="Markup"
                         onChange={handleChange}
+                        value={product.markup}
                         placeholder=""
                     />
                 </CCol>
@@ -255,6 +285,7 @@ const Product = ({ onCancel }) => {
                         floatingClassName="mb-3"
                         floatingLabel="Sale Price"
                         onChange={handleChange}
+                        value={product.sale_price}
                         placeholder=""
                     />
                 </CCol>
@@ -266,6 +297,7 @@ const Product = ({ onCancel }) => {
                 floatingClassName="mb-3"
                 floatingLabel="Color"
                 onChange={handleChange}
+                value={product.color}
                 placeholder=""
             />
             <div className="mb-3">
@@ -273,6 +305,7 @@ const Product = ({ onCancel }) => {
                     type="file"
                     id="image"
                     onChange={handleImageChange}
+                    value={product.image}
                     accept="image/*"
                     className="mb-2"
                 />
@@ -295,7 +328,7 @@ const Product = ({ onCancel }) => {
                     Cancel
                 </CButton>
                 <CButton color="primary" size="sm" type="submit">
-                    Add Product
+                    {product.type === 'add' ? 'Create' : 'Update'}
                 </CButton>
             </div>
         </CForm>
@@ -305,5 +338,27 @@ const Product = ({ onCancel }) => {
 export default Product
 
 Product.propTypes = {
+    product: PropTypes.shape({
+        id: PropTypes.number,
+        name: PropTypes.string,
+        code: PropTypes.string,
+        barcode: PropTypes.string,
+        unit_measurement: PropTypes.string,
+        category_id: PropTypes.number,
+        is_active: PropTypes.bool,
+        default_quantity: PropTypes.bool,
+        age_restriction: PropTypes.number,
+        description: PropTypes.string,
+        taxes: PropTypes.number,
+        cost_price: PropTypes.number,
+        markup: PropTypes.number,
+        sale_price: PropTypes.number,
+        color: PropTypes.string,
+        image: PropTypes.string,
+        type: PropTypes.string,
+    }).isRequired,
+    setProduct: PropTypes.func.isRequired,
     onCancel: PropTypes.func.isRequired,
+    fetchProducts: PropTypes.func,
+    setShowAppModal: PropTypes.func.isRequired,
 }
