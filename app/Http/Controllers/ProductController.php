@@ -8,182 +8,119 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Http\JsonResponse;
+use App\Http\Requests\StoreProductRequest;
+use App\Http\Requests\UpdateProductRequest;
 
-class ProductController extends Controller
+class ProductController extends ApiController
 {
     /**
-     * @var int
-     */
-    protected $items = 25;
-
-    /**
+     * Display a listing of the products.
      *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse The JSON response containing the list of products, along with any relevant messages or errors.
      */
-    public function getProducts(Request $request)
+    public function index(Request $request): JsonResponse
     {
-        try {
-            $currentPage = (int) $request->input('page', 1);
-            $query = Product::with(['category:id,name'])->orderBy('id', 'desc');
-            $products = $query->paginate($this->items, ['*'], 'page', $currentPage);
-            $itemCount = Cache::remember('product_count', 60, fn() => Product::count());
-            $total = (int) ceil($itemCount / $this->items);
+        $query = Product::query();
 
-            return response()->json([
-                'data' => $products->items(),
-                'totalPages' => $total,
-                'currentPage' => $products->currentPage(),
-                'itemCount' => $itemCount,
-            ]);
-        } catch (\Exception $e) {
-            Log::error('Error handling request: ' . $e->getMessage());
-            return response()->json(['error' => 'Internal server error'], 500);
+        if ($request->has('search')) {
+            $input = $request->search;
+
+            $query->where(function ($q) use ($input) {
+                $q->where('name', 'LIKE', "%{$input}%")
+                    ->orWhere('code', 'LIKE', "%{$input}%")
+                    ->orWhere('barcode', 'LIKE', "%{$input}%")
+                    ->orWhere('description', 'LIKE', "%{$input}%");
+            });
         }
+
+        $products = $query->latest()->paginate(20);
+
+        return $this->success($products, 'Products retrieved successfully');
     }
 
     /**
+     * Store a newly created product in storage.
      *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @param StoreProductRequest $request The validated request containing the data for the new product.
+     * @return JsonResponse The JSON response indicating the success or failure of the product creation process, along with any relevant messages or errors.
      */
-    public function createProduct(Request $request)
+    public function store(StoreProductRequest $request): JsonResponse
     {
-        try {
-            $request->validate([
-                'name' => 'required|string|max:255',
-                'code' => 'required|string|max:255',
-                'barcode' => 'nullable|string|max:255',
-                'unit_measurement' => 'required|string|max:255',
-                'is_active' => 'sometimes|boolean',
-                'default_quantity' => 'required|boolean',
-                'category_id' => 'nullable|integer|exists:categories,id',
-                'age_restriction' => 'nullable|integer|min:0',
-                'description' => 'nullable|string',
-                'taxes' => 'nullable|integer|min:0',
-                'cost_price' => 'required|integer|min:0',
-                'markup' => 'required|integer|min:0',
-                'sale_price' => 'required|integer|min:0',
-                'color' => 'nullable|string|max:255',
-                'image' => 'nullable|image|max:2048', // 2MB Max
-            ]);
+        $validated = $request->validated();
 
-            if ($request->default_quantity) {
-                $request->merge(['quantity' => 0]);
+        if ($validated['default_quantity']) {
+            $validated['quantity'] = 0;
+        } else {
+            $validated['quantity'] = $validated->input('quantity', 0);
+        }
+
+        if (is_null($validated['barcode'])) {
+            $lastProduct = Product::orderBy('id', 'desc')->firstOrFail();
+            if ($lastProduct && $lastProduct->barcode) {
+                $lastBarcode = ltrim($lastProduct->barcode, '0');
+                $nextBarcode = str_pad((int) $lastBarcode + 1, 9, '0', STR_PAD_LEFT);
             } else {
-                $request->merge(['quantity' => $request->input('quantity', 0)]);
+                $nextBarcode = '0000000000001';
             }
-
-            if (is_null($request->barcode)) {
-                $lastProduct = Product::orderBy('id', 'desc')->first();
-                if ($lastProduct && $lastProduct->barcode) {
-                    $lastBarcode = ltrim($lastProduct->barcode, '0');
-                    $nextBarcode = str_pad((int) $lastBarcode + 1, 9, '0', STR_PAD_LEFT);
-                } else {
-                    $nextBarcode = '0000000000001';
-                }
-                $request->merge(['barcode' => $nextBarcode]);
-            }
-
-            if ($request->hasFile('image')) {
-                $imagePath = $request->file('image')->store('product_images', 'public');
-                $request->merge(['image' => $imagePath]);
-            }
-
-            $product = Product::create($request->all());
-
-            return response()->json($product, 201);
-        } catch (\Exception $e) {
-            Log::error('Error handling request: ' . $e->getMessage());
-            return response()->json(['error' => 'Internal server error'], 500);
+            $validated['barcode'] = $nextBarcode;
         }
+
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('product_images', 'public');
+            $validated['image'] = $imagePath;
+        }
+
+        $product = Product::create($validated);
+
+        return $this->success($product, 'Product created successfully.', 201);
     }
 
     /**
+     * Update the specified product in storage.
      *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @param UpdateProductRequest $request The validated request containing the data for updating the product.
+     * @return JsonResponse The JSON response indicating the success or failure of the product update process, along with any relevant messages or errors.
      */
-    public function updateProduct(Request $request, $id)
+    public function update(UpdateProductRequest $request, $id): JsonResponse
     {
-        try {
-            $product = Product::findOrFail($id);
+        $validated = $request->validated();
 
-            $request->validate([
-                'name' => 'sometimes|required|string|max:255',
-                'code' => 'sometimes|required|string|max:255|unique:products,code,' . $id,
-                'barcode' => 'nullable|string|max:255|unique:products,barcode,' . $id,
-                'unit_measurement' => 'sometimes|required|string|max:255',
-                'is_active' => 'sometimes|boolean',
-                'default_quantity' => 'sometimes|boolean',
-                'category_id' => 'nullable|integer|exists:categories,id',
-                'age_restriction' => 'nullable|integer|min:0',
-                'description' => 'nullable|string',
-                'taxes' => 'nullable|integer|min:0',
-                'cost_price' => 'sometimes|required|integer|min:0',
-                'markup' => 'sometimes|required|integer|min:0',
-                'sale_price' => 'sometimes|required|integer|min:0',
-                'color' => 'nullable|string|max:255',
-                'image' => 'nullable|image|max:2048', // 2MB Max
-            ]);
+        $product = Product::findOrFail($id);
 
-            if ($request->hasFile('image')) {
-                $imagePath = $request->file('image')->store('product_images', 'public');
-                $request->merge(['image' => $imagePath]);
-            }
-
-            $product->update($request->all());
-
-            return response()->json($product);
-        } catch (\Exception $e) {
-            Log::error('Error handling request: ' . $e->getMessage());
-            return response()->json(['error' => 'Internal server error'], 500);
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('product_images', 'public');
+            $validated['image'] = $imagePath;
         }
+
+        $product->update($validated);
+
+        return $this->success($product, 'Product updated successfully.');
     }
 
     /**
+     * Display the specified product by code or barcode.
      *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse The JSON response containing the product details, along with any relevant messages or errors.
      */
-    public function getProduct(Request $request, $id)
+    public function show($id): JsonResponse
     {
-        try {
-            $product = Product::where('code', $id)->orWhere('barcode', $id)->first();
+        $product = Product::where('code', $id)->orWhere('barcode', $id)->firstOrFail();
 
-            return response()->json($product);
-        } catch (\Exception $e) {
-            Log::error('Error handling request: ' . $e->getMessage());
-            return response()->json(['error' => 'Internal server error'], 500);
-        }
+        return $this->success($product, 'Product retrieved successfully.');
     }
 
     /**
+     * Remove the specified product from storage.
      *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @param int $id The ID of the product to be deleted.
+     * @return JsonResponse The JSON response indicating the success or failure of the product deletion process, along with any relevant messages or errors.
      */
-    public function search(Request $request)
+    public function delete($id): JsonResponse
     {
-        try {
-            $input = $request->input('query');
-            $currentPage = (int) $request->input('page', 1);
-            $query = Product::where('name', 'LIKE', "%$input%")
-                ->orWhere('code', 'LIKE', "%$input%")
-                ->orWhere('barcode', 'LIKE', "%$input%")
-                ->orWhere('description', 'LIKE', "%$input%")
-                ->orderBy('id', 'desc');
-            $searchResults = $query->paginate($this->items, ['*'], 'page', $currentPage);
-            $total = (int) ceil($searchResults->total() / $this->items);
+        $product = Product::findOrFail($id);
+        $product->delete();
 
-            return response()->json([
-                'data' => $searchResults->items(),
-                'totalPages' => $total,
-                'currentPage' => $searchResults->currentPage(),
-            ]);
-        } catch (\Exception $e) {
-            Log::error('Error handling request: ' . $e->getMessage());
-            return response()->json(['error' => 'Internal server error'], 500);
-        }
+        return $this->success($product, 'Product deleted successfully.');
     }
 }

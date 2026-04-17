@@ -54,7 +54,7 @@ const App = () => {
                 </Suspense>
             </Router>
             <ToastContainer theme={storedTheme} transition={Slide} />
-            <DevToolsDetector />
+            {/* <DevToolsDetector />*/}
         </div>
     )
 }

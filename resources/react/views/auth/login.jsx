@@ -42,7 +42,7 @@ const Login = () => {
                 if (res.data.error) {
                     return reject(res.data.error)
                 }
-                cookies.set('session_id', res.data.session_token, { expires: 1 })
+                cookies.set('session_id', res.data.data, { expires: 1 })
                 setTimeout(() => {
                     window.location.href = '/'
                 }, 1000)

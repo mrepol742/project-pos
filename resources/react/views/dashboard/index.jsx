@@ -89,7 +89,7 @@ const Dashboard = () => {
     const fetch = async (url) => {
         return axiosInstance
             .get(url)
-            .then((response) => response.data)
+            .then((response) => response.data.data)
             .catch((error) => {
                 console.error('Error fetching dashboard data:', error)
                 throw error

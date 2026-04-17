@@ -170,16 +170,13 @@ const PointOfSale = () => {
         axiosInstance
             .get(`/sales-lock`)
             .then((response) => {
-                if (response.data.error) return toast.error(response.data.error)
-                if (response.data.length > 0) {
-                    setSalesLock(true)
-                    setProducts(JSON.parse(response.data))
-                } else {
-                    setSalesLock(false)
-                }
+                const products = JSON.parse(response.data.data.products)
+                setSalesLock(products.length > 0)
+                setProducts(products)
             })
             .catch((error) => {
                 console.error('Error fetching sales lock:', error)
+                setSalesLock(false)
             })
     }
 
@@ -187,8 +184,7 @@ const PointOfSale = () => {
         if (products.length === 0) return toast.error('No products in cart')
         axiosInstance
             .post(`/sales-lock`, {
-                products: !salesLock ? JSON.stringify(products) : '[]',
-                mode: !salesLock,
+                products: !salesLock ? products : [],
             })
             .then((response) => {
                 if (response.data.error) return toast.error(response.data.error)
@@ -283,11 +279,9 @@ const PointOfSale = () => {
         }
 
         axiosInstance
-            .get(`/products/${query}`)
+            .get(`/pos/${query}`)
             .then((response) => {
-                if (response.data.error) return toast.error(response.data.error)
-                if (!response.data.id) return toast.error('Product not found')
-                const foundProduct = response.data
+                const foundProduct = response.data.data
                 setProducts((prevProducts) => {
                     const existingProduct = prevProducts.find(
                         (p) => p.id === foundProduct.id && p.discount === 0,
@@ -309,6 +303,9 @@ const PointOfSale = () => {
             })
             .catch((error) => {
                 console.error('Error searching products:', error)
+                toast.error(
+                    error.status === 404 ? 'Product not found' : error.response.data.message,
+                )
             })
     }
 

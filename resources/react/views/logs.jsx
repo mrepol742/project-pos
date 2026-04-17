@@ -27,7 +27,7 @@ const Logs = () => {
     const fetchFiles = async () => {
         try {
             const res = await axiosInstance.get('/logs')
-            setFiles(res.data)
+            setFiles(res.data.data)
         } catch (e) {
             console.error('Error fetching log files:', e)
             toast.error('Failed to load log files')
@@ -42,7 +42,7 @@ const Logs = () => {
 
         try {
             const res = await axiosInstance.get(`/logs/${filename}`)
-            setContent(res.data.content)
+            setContent(res.data.data)
         } catch (e) {
             console.error('Error fetching log content:', e)
             toast.error('Failed to load log file')

@@ -21,21 +21,24 @@ const Drive = () => {
         fetchFiles(currentPage)
     }, [currentPage])
 
-    const fetchFiles = async (page) => {
-        try {
-            const response = await axiosInstance.get('/files', {
-                params: { page },
+    const fetchFiles = async (currentPage) => {
+        await axiosInstance
+            .get('/files', {
+                params: { currentPage },
             })
-            if (response.data.error) return toast.error(response.data.error)
-            setFiles(response.data.data)
-            setTotalSize(response.data.totalSize)
-            setTotalPages(response.data.totalPages)
-            setCurrentPage(response.data.currentPage)
-        } catch (error) {
-            toast.error('Failed to fetch files list')
-        } finally {
-            setLoading(false)
-        }
+            .then((response) => {
+                setFiles(response.data.data.files.data)
+                setTotalSize(response.data.data.total_size)
+                setTotalPages(response.data.data.files.last_page)
+                setCurrentPage(response.data.data.files.current_page)
+            })
+            .catch((error) => {
+                console.error('Error fetching Files:', error)
+                toast.error('Failed to fetch files list')
+            })
+            .finally(() => {
+                setLoading(false)
+            })
     }
 
     const uploadNext = useCallback(async () => {

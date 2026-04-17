@@ -26,23 +26,25 @@ const Sales = () => {
     }, [currentPage])
 
     const fetchSales = async (currentPage) => {
-        try {
-            const response = await axiosInstance.get('/sales', {
+        await axiosInstance
+            .get('/sales', {
                 params: {
                     page: currentPage,
                 },
             })
-            if (response.data.error) return toast.error(response.data.error)
-            setSales(response.data.data)
-            setTotalPages(response.data.totalPages)
-            setCurrentPage(response.data.currentPage)
-            setItemCount(response.data.itemCount)
-        } catch (error) {
-            console.error('Error fetching Products:', error)
-            toast.error('Failed to fetch sales list')
-        } finally {
-            setLoading(false)
-        }
+            .then((response) => {
+                setSales(response.data.data.data)
+                setCurrentPage(response.data.data.current_page)
+                setTotalPages(response.data.data.last_page)
+                setItemCount(response.data.data.total)
+            })
+            .catch((error) => {
+                console.error('Error fetching Products:', error)
+                toast.error('Failed to fetch sales list')
+            })
+            .finally(() => {
+                setLoading(false)
+            })
     }
 
     return (
@@ -79,7 +81,9 @@ const Sales = () => {
                                 <CTableHeaderCell scope="col">Amount</CTableHeaderCell>
                                 <CTableHeaderCell scope="col">Discount</CTableHeaderCell>
                                 <CTableHeaderCell scope="col">Payment</CTableHeaderCell>
-                                <CTableHeaderCell scope="col" className="text-nowrap">Reference Number</CTableHeaderCell>
+                                <CTableHeaderCell scope="col" className="text-nowrap">
+                                    Reference Number
+                                </CTableHeaderCell>
                                 <CTableHeaderCell scope="col"></CTableHeaderCell>
                             </CTableRow>
                         </CTableHead>

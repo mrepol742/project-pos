@@ -6,73 +6,54 @@ use App\Models\Sale;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Http\JsonResponse;
 use Laravel\Pail\Contracts\Printer;
 
-class SalesController extends Controller
+class SalesController extends ApiController
 {
-
-    public function getSales(Request $request)
+    /**
+     * Display a listing of the sales.
+     *
+     * @return JsonResponse The JSON response containing the list of sales, along with any relevant messages or errors.
+     */
+    public function getSales(): JsonResponse
     {
-        try {
-            $currentPage = (int) $request->input('page', 1);
-            $query = Sale::with(['cashier'])->orderBy('id', 'desc');
-            $sales = $query->paginate(100, ['*'], 'page', $currentPage);
-            $total = (int) ceil($sales->total() / 100);
-            $itemCount = Sale::count();
+        $sales = Sale::with(['cashier'])
+            ->latest()
+            ->paginate(20);
 
-            // format the id to be 12 digits with leading zeros
-            $data = array_map(function ($sale) {
-            $saleArray = $sale->toArray();
-            $saleArray['id'] = str_pad($sale->id, 12, '0', STR_PAD_LEFT);
-            return $saleArray;
-            }, $sales->items());
-
-            return response()->json([
-            'data' => $data,
-            'totalPages' => $total,
-            'currentPage' => $sales->currentPage(),
-            'itemCount' => $itemCount,
-            ]);
-        } catch (\Exception $e) {
-            Log::error('Error handling request: ' . $e->getMessage());
-            return response()->json(['error' => 'Internal server error'], 500);
-        }
+        return $this->success($sales, 'Sales retrieved successfully');
     }
 
-    public function getTodaysSales(Request $request)
+    /**
+     * Display a listing of today's sales.
+     *
+     * @return JsonResponse The JSON response containing the list of today's sales, along with any relevant messages or errors.
+     */
+    public function getTodaysSales(Request $request): JsonResponse
     {
-        try {
-            $currentPage = (int) $request->input('page', 1);
-            $query = Sale::where('cashier_id', Auth::user()->id)
-                ->whereDate('created_at', now()->format('Y-m-d'))
-                ->orderBy('id', 'desc');
-            $sales = $query->paginate(100, ['*'], 'page', $currentPage);
-            $total = (int) ceil($sales->total() / 100);
-            $itemCount = Sale::whereDate('created_at', now()->format('Y-m-d'))->count();
+        $sales = Sale::where('cashier_id', Auth::user()->id)
+            ->whereDate('created_at', now()->format('Y-m-d'))
+            ->orderBy('id', 'desc');
+        $itemCount = Cache::remember(
+            'sale_count',
+            60,
+            fn() => Sale::whereDate('created_at', now()->format('Y-m-d'))->count(),
+        );
 
-            // format the id to be 12 digits with leading zeros
-            $data = array_map(function ($sale) {
-                $saleArray = $sale->toArray();
-                $saleArray['id'] = str_pad($sale->id, 12, '0', STR_PAD_LEFT);
-                return $saleArray;
-            }, $sales->items());
+        $data = [
+            'data' => $sales->paginate(20),
+            'itemCount' => $itemCount,
+        ];
 
-            return response()->json([
-                'data' => $data,
-                'totalPages' => $total,
-                'currentPage' => $sales->currentPage(),
-                'itemCount' => $itemCount,
-            ]);
-        } catch (\Exception $e) {
-            Log::error('Error handling request: ' . $e->getMessage());
-            return response()->json(['error' => 'Internal server error'], 500);
-        }
+        return $this->success($data, 'Today\'s sales retrieved successfully');
     }
 
     public function checkout(Request $request)
     {
         try {
-            $data =  [
+            $data = [
                 'products' => $request->input('products'),
                 'total' => $request->input('total'),
                 'discount' => $request->input('discount'),
@@ -100,7 +81,7 @@ class SalesController extends Controller
                     'id' => str_pad($sale->id, 12, '0', STR_PAD_LEFT),
                     'cashier' => Auth::user(),
                     'date_of_sale' => $sale->created_at->format('Y-m-d H:i:s'),
-                    ...$data
+                    ...$data,
                 ],
             ]);
         } catch (\Exception $e) {

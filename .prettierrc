@@ -1,8 +1,24 @@
 {
-    "plugins": ["prettier-plugin-blade", "@prettier/plugin-php"],
     "semi": false,
-    "trailingComma": "all",
     "singleQuote": true,
+    "trailingComma": "all",
     "printWidth": 100,
-    "tabWidth": 4
+    "tabWidth": 4,
+
+    "plugins": ["@prettier/plugin-php", "prettier-plugin-blade"],
+
+    "overrides": [
+        {
+            "files": "*.php",
+            "options": { "parser": "php" }
+        },
+        {
+            "files": "*.blade.php",
+            "options": { "parser": "blade" }
+        },
+        {
+            "files": ["*.ts", "*.tsx"],
+            "options": { "parser": "typescript" }
+        }
+    ]
 }

@@ -40,9 +40,8 @@ const NewUser = ({ user, setUser, onCancel, fetchUsers, setShowAppModal }) => {
         e.preventDefault()
         if (user.type === 'add')
             return axiosInstance
-                .put('/users', user)
+                .post('/users', user)
                 .then((response) => {
-                    if (response.data.error) return toast.error(response.data.error)
                     toast.success(`${user.name} created successfully`)
                     setUser({
                         name: '',
@@ -60,7 +59,7 @@ const NewUser = ({ user, setUser, onCancel, fetchUsers, setShowAppModal }) => {
                 })
                 .catch((error) => {
                     console.error('Error creating user:', error)
-                    toast.error(`Failed to create user ${user.name}`)
+                    toast.error(error.response.data.message)
                 })
 
         axiosInstance
@@ -84,13 +83,13 @@ const NewUser = ({ user, setUser, onCancel, fetchUsers, setShowAppModal }) => {
             })
             .catch((error) => {
                 console.error('Error updating user:', error)
-                toast.error(`Failed to update user ${user.name}`)
+                toast.error(error.response.data.message)
             })
     }
 
     const fetchData = async () => {
         const [fetchRoles] = await Promise.all([axiosInstance.get('/roles')])
-        setRoles(fetchRoles.data)
+        setRoles(fetchRoles.data.data)
     }
 
     const toCapitalize = (str) => {

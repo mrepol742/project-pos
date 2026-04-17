@@ -23,7 +23,7 @@ const AppAuth = () => {
 
         try {
             const response = await axiosInstance.post('/auth/verify-session', { session_id })
-            dispatch({ type: 'SET_USER', payload: response.data.user })
+            dispatch({ type: 'SET_USER', payload: response.data.data })
             setIsAuth(true)
         } catch (error) {
             cookies.remove('session_id')

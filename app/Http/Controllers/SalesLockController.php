@@ -7,50 +7,72 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\JsonResponse;
+use App\Http\Requests\StoreSalesLockRequest;
 
-class SalesLockController extends Controller
+class SalesLockController extends ApiController
 {
-    public function getSalesLock(Request $request)
+    /**
+     * Get the current sales lock for the authenticated cashier.
+     *
+     * @return JsonResponse A JSON response containing the products in the sales lock, or an empty array if no lock exists.
+     */
+    public function index(): JsonResponse
     {
-        try {
-            $salesLock = SaleLock::where('cashier_id', Auth::user()->id)
-                ->orderBy('created_at', 'desc')
-                ->first();
-            return response()->json($salesLock->products ?? []);
-        } catch (\Exception $e) {
-            Log::error('Error handling request: ' . $e->getMessage());
-            return response()->json(['error' => 'Internal server error'], 500);
-        }
+        $salesLock = SaleLock::where('cashier_id', Auth::user()->id)
+            ->orderBy('created_at', 'desc')
+            ->firstOrFail();
+
+        return $this->success($salesLock, 'Sales lock retrieved successfully');
     }
 
-    public function createSalesLock(Request $request)
+    /**
+     * Get a specific sales lock for the authenticated cashier.
+     *
+     * @param int $id The ID of the sales lock to be retrieved.
+     * @return JsonResponse A JSON response containing the products in the specified sales lock, or an error message if the lock is not found.
+     */
+    public function show($id): JsonResponse
     {
-        try {
-            $validator = Validator::make($request->all(), [
-                'products' => 'required|json',
-                'mode' => 'required|boolean',
-            ]);
+        $salesLock = SaleLock::where('cashier_id', Auth::user()->id)
+            ->where('id', $id)
+            ->firstOrFail();
 
-            if ($validator->fails())
-                return response()->json($validator->errors(), 422);
+        return $this->success($salesLock->products, 'Sales lock retrieved successfully');
+    }
 
-            if (!$request->mode) {
-                $salesLock = SaleLock::where('cashier_id', Auth::user()->id)
-                    ->orderBy('created_at', 'desc')
-                    ->first();
+    /**
+     * Create or update a sales lock for the authenticated cashier.
+     *
+     * @param StoreSalesLockRequest $request The validated request containing the products to be locked.
+     * @return JsonResponse A JSON response indicating the success or failure of the sales lock creation
+     */
+    public function store(StoreSalesLockRequest $request): JsonResponse
+    {
+        $validated = $request->validated();
 
-                $salesLock->delete();
-                return response()->json(['message' => 'Sales lock deleted successfully']);
-            }
-            $salesLock = SaleLock::create([
-                'cashier_id' => Auth::user()->id,
-                'products' => $request->products,
-            ]);
+        $salesLock = SaleLock::updateOrCreate(
+            ['cashier_id' => Auth::user()->id],
+            ['products' => $request->input('products')],
+        );
 
-            return response()->json($salesLock, 201);
-        } catch (\Exception $e) {
-            Log::error('Error handling request: ' . $e->getMessage());
-            return response()->json(['error' => 'Internal server error'], 500);
-        }
+        return $this->success($salesLock, 'Sales lock saved successfully');
+    }
+
+    /**
+     * Delete a specific sales lock for the authenticated cashier.
+
+     * @param int $id The ID of the sales lock to be deleted.
+     * @return JsonResponse A JSON response indicating the success or failure of the sales lock deletion process, along with any relevant messages or errors.
+     */
+    public function destroy($id): JsonResponse
+    {
+        $salesLock = SaleLock::where('cashier_id', Auth::user()->id)
+            ->where('id', $id)
+            ->firstOrFail();
+
+        $salesLock->delete();
+
+        return $this->success(null, 'Sales lock deleted successfully');
     }
 }

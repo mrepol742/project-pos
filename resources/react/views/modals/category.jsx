@@ -30,9 +30,8 @@ const NewCategory = ({ category, setCategory, onCancel, fetchCategories, setShow
         e.preventDefault()
         if (category.type === 'add')
             return axiosInstance
-                .put('/categories', category)
+                .post('/categories', category)
                 .then((response) => {
-                    if (response.data.error) return toast.error(response.data.error)
                     toast.success(`${category.name} created successfully`)
                     setCategory({
                         name: '',
@@ -44,13 +43,12 @@ const NewCategory = ({ category, setCategory, onCancel, fetchCategories, setShow
                 })
                 .catch((error) => {
                     console.error('Error creating category:', error)
-                    toast.error(`Failed to create category ${category.name}`)
+                    toast.error(error.response.data.message)
                 })
 
         axiosInstance
             .patch(`/categories/${category.id}`, category)
             .then((response) => {
-                if (response.data.error) return toast.error(response.data.error)
                 toast.success(`${category.name} updated successfully`)
                 setCategory({
                     name: '',
@@ -62,13 +60,12 @@ const NewCategory = ({ category, setCategory, onCancel, fetchCategories, setShow
             })
             .catch((error) => {
                 console.error('Error updating category:', error)
-                toast.error(`Failed to update category ${category.name}`)
+                toast.error(error.response.data.message)
             })
     }
 
     return (
         <CForm onSubmit={handleSubmit}>
-            {category.name}
             <div className="d-flex align-items-center mb-3 fs-5">
                 <FontAwesomeIcon
                     icon={category.type === 'add' ? faPlus : faEdit}
@@ -82,7 +79,7 @@ const NewCategory = ({ category, setCategory, onCancel, fetchCategories, setShow
                 floatingClassName="mb-3"
                 floatingLabel="Name"
                 onChange={handleChange}
-                vaue={category.name}
+                value={category.name}
                 placeholder=""
                 required
             />
@@ -92,9 +89,8 @@ const NewCategory = ({ category, setCategory, onCancel, fetchCategories, setShow
                 floatingClassName="mb-3"
                 floatingLabel="Description"
                 onChange={handleChange}
-                value={category.address}
+                value={category.description}
                 placeholder=""
-                required
             />
             <div className="d-flex justify-content-end mt-3">
                 <CButton color="secondary" className="me-2" size="sm" onClick={onCancel}>

@@ -22,30 +22,23 @@ import axiosInstance from '../services/axios'
 const Categories = () => {
     const [categories, setCategories] = useState([])
     const [category, setCategory] = useState({
+        id: 0,
         name: '',
         description: '',
         type: 'add',
     })
-    const [currentPage, setCurrentPage] = useState(1)
-    const [totalPages, setTotalPages] = useState(0)
     const [showAppModal, setShowAppModal] = useState(false)
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
-        fetchCategories(currentPage)
-    }, [currentPage])
+        fetchCategories()
+    }, [])
 
-    const fetchCategories = async (currentPage) => {
+    const fetchCategories = async () => {
         try {
-            const response = await axiosInstance.get('/categories', {
-                params: {
-                    page: currentPage,
-                },
-            })
+            const response = await axiosInstance.get('/categories')
             if (response.data.error) return toast.error(response.data.error)
             setCategories(response.data.data)
-            setTotalPages(response.data.totalPages)
-            setCurrentPage(response.data.currentPage)
         } catch (error) {
             console.error('Error fetching Categories:', error)
             toast.error('Failed to fetch categories list')
@@ -56,6 +49,7 @@ const Categories = () => {
 
     const handleAdd = () => {
         setCategory({
+            id: 0,
             name: '',
             description: '',
             type: 'add',
@@ -150,12 +144,6 @@ const Categories = () => {
                             ))}
                         </CTableBody>
                     </CTable>
-                    <AppPagination
-                        currentPage={currentPage}
-                        setCurrentPage={setCurrentPage}
-                        totalPages={totalPages}
-                        setTotalPages={setTotalPages}
-                    />
                 </>
             )}
         </div>

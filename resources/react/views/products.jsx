@@ -54,23 +54,25 @@ const Products = () => {
     }, [currentPage])
 
     const fetchProducts = async (currentPage) => {
-        try {
-            const response = await axiosInstance.get('/products/all', {
+        await axiosInstance
+            .get('/products', {
                 params: {
                     page: currentPage,
                 },
             })
-            if (response.data.error) return toast.error(response.data.error)
-            setProducts(response.data.data)
-            setTotalPages(response.data.totalPages)
-            setCurrentPage(response.data.currentPage)
-            setItemCount(response.data.itemCount)
-        } catch (error) {
-            console.error('Error fetching Products:', error)
-            toast.error('Failed to fetch products list')
-        } finally {
-            setLoading(false)
-        }
+            .then((response) => {
+                setProducts(response.data.data.data)
+                setCurrentPage(response.data.data.current_page)
+                setTotalPages(response.data.data.last_page)
+                setItemCount(response.data.data.total)
+            })
+            .catch((error) => {
+                console.error('Error fetching Products:', error)
+                toast.error('Failed to fetch products list')
+            })
+            .finally(() => {
+                setLoading(false)
+            })
     }
 
     const exportProducts = async () => {
@@ -176,8 +178,12 @@ const Products = () => {
                                 <CTableHeaderCell scope="col">Code</CTableHeaderCell>
                                 <CTableHeaderCell scope="col">Barcode</CTableHeaderCell>
                                 <CTableHeaderCell scope="col">Quantity</CTableHeaderCell>
-                                <CTableHeaderCell scope="col" className="text-nowrap">Cost Price</CTableHeaderCell>
-                                <CTableHeaderCell scope="col" className="text-nowrap">Sale Price</CTableHeaderCell>
+                                <CTableHeaderCell scope="col" className="text-nowrap">
+                                    Cost Price
+                                </CTableHeaderCell>
+                                <CTableHeaderCell scope="col" className="text-nowrap">
+                                    Sale Price
+                                </CTableHeaderCell>
                                 <CTableHeaderCell scope="col">Stock</CTableHeaderCell>
                                 <CTableHeaderCell scope="col">Category</CTableHeaderCell>
                                 <CTableHeaderCell scope="col"></CTableHeaderCell>

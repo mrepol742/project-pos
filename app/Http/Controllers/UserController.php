@@ -6,132 +6,65 @@ use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Http\JsonResponse;
+use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\UpdateUserRequest;
 
-class UserController extends Controller
+class UserController extends ApiController
 {
     /**
-     * @var int
-     */
-    protected $items = 15;
-
-    /**
+     * Get a paginated list of users.
      *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse The JSON response containing the paginated list of users, along with the total item count and any relevant messages or errors.
      */
-    public function getUsers(Request $request)
+    public function index(): JsonResponse
     {
-        try {
-            $currentPage = (int) $request->input('page', 1);
-            $users = User::paginate($this->items, ['*'], 'page', $currentPage);
-            $total = (int) ceil($users->total() / $this->items);
-            $itemCount = User::count();
+        $users = User::latest('updated_at')->paginate(30);
 
-            return response()->json([
-                'data' => $users->items(),
-                'totalPages' => $total,
-                'currentPage' => $users->currentPage(),
-                'itemCount' => $itemCount,
-            ]);
-        } catch (\Exception $e) {
-            Log::error('Error handling request: ' . $e->getMessage());
-            return response()->json(['error' => 'Internal server error'], 500);
-        }
+        return $this->success($users, 'Users retrieved successfully');
     }
 
     /**
-     * Get all roles.
+     * Store a newly created user in storage.
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @param StoreUserRequest $request The validated request containing the data for the new user.
+     * @return JsonResponse The JSON response indicating the success or failure of the user creation process, along with any relevant messages or errors.
      */
-    public function getRoles()
+    public function store(StoreUserRequest $request): JsonResponse
     {
-        try {
-            $roles = Role::all();
-            return response()->json($roles);
-        } catch (\Exception $e) {
-            Log::error('Error handling request: ' . $e->getMessage());
-            return response()->json(['error' => 'Internal server error'], 500);
-        }
+        $validated = $request->validated();
+        $user = User::create($request->all());
+
+        return $this->success($user, 'User created successfully', 201);
     }
 
     /**
+     * Update the specified user in storage.
      *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @param UpdateUserRequest $request The validated request containing the data for updating the user.
+     * @return JsonResponse The JSON response indicating the success or failure of the user update process, along with any relevant messages or errors.
      */
-    public function createUser(Request $request)
+    public function update(UpdateUserRequest $request, $id): JsonResponse
     {
-        try {
-            $request->validate([
-                'name' => 'required|string|max:255',
-                'username' => 'required|string|max:255|unique:users,username',
-                'password' => 'required|string|min:6',
-                'email' => 'email|max:255|unique:users,email',
-                'phone' => 'nullable|string|max:255',
-                'address' => 'nullable|string|max:255',
-                'role' => 'required|string|exists:roles,name',
-                'status' => 'required|string|in:active,inactive',
-            ]);
+        $validated = $request->validated();
 
-            $user = User::create($request->all());
+        $user = User::findOrFail($id);
 
-            return response()->json($user, 201);
-        } catch (\Exception $e) {
-            Log::error('Error handling request: ' . $e->getMessage());
-            return response()->json(['error' => 'Internal server error'], 500);
-        }
+        $user->update($request->all());
+
+        return $this->success($user, 'User updated successfully');
     }
 
     /**
+     * Remove the specified user from storage.
      *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse The JSON response indicating the success or failure of the user deletion process, along with any relevant messages or errors.
      */
-    public function updateUser(Request $request, $id)
+    public function delete($id): JsonResponse
     {
-        try {
-            $user = User::find($id);
-            if (!$user) {
-                return response()->json(['message' => 'User not found'], 404);
-            }
+        $user = User::findOrFail($id);
+        $user->delete();
 
-            $request->validate([
-                'name' => 'sometimes|required|string|max:255',
-                'username' => 'sometimes|required|string|max:255|unique:users,username,' . $id,
-                'email' => 'sometimes|required|email|max:255|unique:users,email,' . $id,
-                'phone' => 'nullable|string|max:255',
-                'address' => 'nullable|string|max:255',
-                'role' => 'sometimes|required|string|exists:roles,name',
-                'status' => 'sometimes|required|string|in:active,inactive',
-            ]);
-
-            $user->update($request->all());
-
-            return response()->json($user);
-        } catch (\Exception $e) {
-            Log::error('Error handling request: ' . $e->getMessage());
-            return response()->json(['error' => 'Internal server error'], 500);
-        }
-    }
-
-    /**
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function deleteUser($id)
-    {
-        try {
-            $user = User::find($id);
-            if (!$user) {
-                return response()->json(['message' => 'User not found'], 404);
-            }
-
-            $user->delete();
-        } catch (\Exception $e) {
-            Log::error('Error handling request: ' . $e->getMessage());
-            return response()->json(['error' => 'Internal server error'], 500);
-        }
+        return $this->success($user, 'User deleted successfully.');
     }
 }

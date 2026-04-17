@@ -6,7 +6,7 @@ import { faChevronRight, faChevronLeft } from '@fortawesome/free-solid-svg-icons
 
 const AppPagination = ({ currentPage, setCurrentPage, totalPages, setTotalPages }) => {
     return (
-        <CPagination aria-label="Page navigation">
+        <CPagination aria-label="Page navigation" className="mt-3">
             <CPaginationItem
                 onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
                 disabled={currentPage === 1}

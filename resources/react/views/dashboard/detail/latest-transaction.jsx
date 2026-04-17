@@ -29,7 +29,7 @@ export const LatestTransaction = () => {
             setLoading(true)
             const response = await axiosInstance.get('/dashboard/latest-transactions')
             if (response.data.error) return toast.error(response.data.error)
-            setLatestTransactions(response.data)
+            setLatestTransactions(response.data.data)
         } catch (error) {
             console.error('Error fetching latest transactions:', error)
             toast.error('Failed to fetch latest transactions')

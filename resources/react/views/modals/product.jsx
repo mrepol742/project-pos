@@ -48,9 +48,8 @@ const Product = ({ product, setProduct, onCancel, fetchProducts, setShowAppModal
         e.preventDefault()
         if (product.type === 'add')
             return axiosInstance
-                .put('/products', product)
+                .post('/products', product)
                 .then((response) => {
-                    if (response.data.error) return toast.error(response.data.error)
                     toast.success(`${product.name} created successfully`)
                     setProduct({
                         name: '',
@@ -75,13 +74,12 @@ const Product = ({ product, setProduct, onCancel, fetchProducts, setShowAppModal
                 })
                 .catch((error) => {
                     console.error('Error creating product:', error)
-                    toast.error(`Failed to create product ${product.name}`)
+                    toast.error(error.response.data.message)
                 })
 
         axiosInstance
             .patch(`/products/${product.id}`, product)
             .then((response) => {
-                if (response.data.error) return toast.error(response.data.error)
                 toast.success(`${product.name} updated successfully`)
                 setProduct({
                     name: '',
@@ -106,7 +104,7 @@ const Product = ({ product, setProduct, onCancel, fetchProducts, setShowAppModal
             })
             .catch((error) => {
                 console.error('Error updating product:', error)
-                toast.error(`Failed to update product ${product.name}`)
+                toast.error(error.response.data.message)
             })
     }
 
@@ -133,7 +131,7 @@ const Product = ({ product, setProduct, onCancel, fetchProducts, setShowAppModal
 
     const fetchData = async () => {
         const [fetchCategories] = await Promise.all([axiosInstance.get('/categories')])
-        setCategories(fetchCategories.data)
+        setCategories(fetchCategories.data.data)
     }
 
     useEffect(() => {

@@ -3,125 +3,68 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\JsonResponse;
+use App\Http\Requests\StoreCategoryRequest;
+use App\Http\Requests\UpdateCategoryRequest;
 
-/*
- * CategoryController (formerly groups).
- */
-class CategoryController extends Controller
+class CategoryController extends ApiController
 {
     /**
-     * @var int
-     */
-    protected $items = 15;
-
-    /**
+     * Display a listing of the resource.
      *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse The JSON response containing the paginated list of categories.
      */
-    public function getCategories(Request $request)
+    public function index(): JsonResponse
     {
-        try {
-            $currentPage = $request->input('page');
+        $categories = Category::latest()->get();
 
-            if (is_null($currentPage)) {
-                $categories = Category::orderBy('id', 'desc')->get();
-
-                return response()->json($categories);
-            }
-
-            $currentPage = (int) $currentPage;
-            $query = Category::orderBy('id', 'desc');
-            $categories = $query->paginate($this->items, ['*'], 'page', $currentPage);
-            $total = (int) ceil($categories->total() / $this->items);
-
-            return response()->json([
-                'data' => $categories->items(),
-                'totalPages' => $total,
-                'currentPage' => $categories->currentPage(),
-            ]);
-        } catch (\Exception $e) {
-            Log::error('Error handling request: ' . $e->getMessage());
-            return response()->json(['error' => 'Internal server error'], 500);
-        }
+        return $this->success($categories, 'Categories retrieved successfully.');
     }
 
     /**
+     * Store a newly created resource in storage.
      *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @param StoreCategoryRequest $request The validated request containing the data for the new category.
+     * @return JsonResponse The JSON response indicating the success or failure of the category creation process.
      */
-    public function createCategory(Request $request)
+    public function store(StoreCategoryRequest $request): JsonResponse
     {
-        try {
-            $validator = Validator::make($request->all(), [
-                'name' => 'required|string|max:255|unique:categories,name',
-                'description' => 'nullable|string|max:1000',
-            ]);
+        $validated = $request->validated();
 
-            if ($validator->fails()) {
-                return response()->json($validator->errors(), 422);
-            }
+        $category = Category::create($validated);
 
-            Category::create($request->all());
-            return response()->json(['message' => 'Group created successfully'], 201);
-        } catch (\Exception $e) {
-            Log::error('Error handling request: ' . $e->getMessage());
-            return response()->json(['error' => 'Internal server error'], 500);
-        }
+        return $this->success($category, 'Category created successfully.', 201);
     }
 
     /**
+     * Update the specified resource in storage.
      *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @param UpdateCategoryRequest $request The validated request containing the data for updating the category.
+     * @param int $id The ID of the category to be updated.
+     * @return JsonResponse The JSON response indicating the success or failure of the category update process, along with any relevant messages or errors.
      */
-    public function updateCategory(Request $request, $id)
+    public function update(UpdateCategoryRequest $request, $id): JsonResponse
     {
-        try {
-            $category = Category::find($id);
-            if (!$category) {
-                return response()->json(['message' => 'Category not found'], 404);
-            }
+        $validated = $request->validated();
 
-            $validator = Validator::make($request->all(), [
-                'name' => 'required|string|max:255|unique:categories,name,' . $id,
-                'description' => 'nullable|string|max:1000',
-            ]);
+        $category = Category::findOrFail($id);
 
-            if ($validator->fails()) {
-                return response()->json($validator->errors(), 422);
-            }
+        $category->update($validated);
 
-            $category->update($request->all());
-            return response()->json(['message' => 'Category updated successfully'], 200);
-        } catch (\Exception $e) {
-            Log::error('Error handling request: ' . $e->getMessage());
-            return response()->json(['error' => 'Internal server error'], 500);
-        }
+        return $this->success($category, 'Category updated successfully.');
     }
 
     /**
+     * Remove the specified resource from storage.
      *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @param int $id The ID of the category to be deleted.
+     * @return JsonResponse The JSON response indicating the success or failure of the category deletion process, along with any relevant messages or errors.
      */
-    public function deleteCategory(Request $request, $id)
+    public function delete($id): JsonResponse
     {
-        try {
-            $category = Category::find($id);
-            if (!$category) {
-                return response()->json(['message' => 'Category not found'], 404);
-            }
+        $category = Category::findOrFail($id);
+        $category->delete();
 
-            $category->delete();
-            return response()->json(['message' => 'Category deleted successfully'], 200);
-        } catch (\Exception $e) {
-            Log::error('Error handling request: ' . $e->getMessage());
-            return response()->json(['error' => 'Internal server error'], 500);
-        }
+        return $this->success($category, 'Category deleted successfully.');
     }
 }

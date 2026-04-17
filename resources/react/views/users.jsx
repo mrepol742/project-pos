@@ -17,6 +17,8 @@ import User from './modals/user'
 import AppPagination from '../components/pagination'
 import AppModal from '../components/modal'
 import axiosInstance from '../services/axios'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons'
 
 const Users = () => {
     const navigate = useNavigate()
@@ -43,23 +45,25 @@ const Users = () => {
     }, [currentPage])
 
     const fetchUsers = async (currentPage) => {
-        try {
-            const response = await axiosInstance.get('/users', {
+        await axiosInstance
+            .get('/users', {
                 params: {
                     page: currentPage,
                 },
             })
-            if (response.data.error) return toast.error(response.data.error)
-            setUsers(response.data.data)
-            setTotalPages(response.data.totalPages)
-            setCurrentPage(response.data.currentPage)
-            setItemCount(response.data.itemCount)
-        } catch (error) {
-            console.error('Error fetching Users:', error)
-            toast.error('Failed to fetch users list')
-        } finally {
-            setLoading(false)
-        }
+            .then((response) => {
+                setUsers(response.data.data.data)
+                setCurrentPage(response.data.data.current_page)
+                setTotalPages(response.data.data.last_page)
+                setItemCount(response.data.data.total)
+            })
+            .catch((error) => {
+                console.error('Error fetching Users:', error)
+                toast.error('Failed to fetch users list')
+            })
+            .finally(() => {
+                setLoading(false)
+            })
     }
 
     const exportUsers = async () => {
@@ -171,15 +175,15 @@ const Users = () => {
                                                 color="primary"
                                                 onClick={() => handleEdit(user)}
                                             >
-                                                Edit
+                                                <FontAwesomeIcon icon={faEdit} />
                                             </CButton>
                                             <CButton
                                                 size="sm"
                                                 color="danger"
                                                 onClick={() => alert(`Delete ${user.name}`)}
-                                                className="ms-2"
+                                                className="ms-2 text-white"
                                             >
-                                                Delete
+                                                <FontAwesomeIcon icon={faTrash} />
                                             </CButton>
                                         </div>
                                     </CTableDataCell>

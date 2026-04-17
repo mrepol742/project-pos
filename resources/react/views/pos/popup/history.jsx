@@ -29,9 +29,9 @@ const History = ({ data }) => {
             axiosInstance
                 .get('/sales-history')
                 .then((response) => {
-                    setHistoryData(response.data.data)
-                    setTotalPages(response.data.totalPages)
-                    setCurrentPage(response.data.currentPage)
+                    setHistoryData(response.data.data.data.data)
+                    setTotalPages(response.data.data.data.last_page)
+                    setCurrentPage(response.data.data.data.current_page)
                 })
                 .catch((error) => {
                     console.error('Error fetching sales history:', error)
