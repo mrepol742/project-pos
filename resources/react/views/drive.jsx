@@ -104,7 +104,7 @@ const Drive = () => {
     return (
         <>
             <Helmet>
-                <title>Drive - Project POS</title>
+                <title>Drive - Point of Sale</title>
             </Helmet>
 
             <div

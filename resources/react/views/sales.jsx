@@ -50,7 +50,7 @@ const Sales = () => {
     return (
         <div>
             <Helmet>
-                <title>Sales - Project POS</title>
+                <title>Sales - Point of Sale</title>
             </Helmet>
             <div className="d-flex justify-content-between align-items-center mb-3">
                 <div>

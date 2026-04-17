@@ -1,6 +1,6 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "mrepol742/project-pos",
+    "name": "mrepol742/point-of-sale",
     "type": "project",
     "description": "",
     "license": "proprietary",

@@ -72,7 +72,7 @@ const Login = () => {
                         <CCard className="p-4 border-0 rounded-4 shadow">
                             <CCardBody>
                                 <CForm onSubmit={handleLogin}>
-                                    <h2>Project POS</h2>
+                                    <h2>Point of Sale</h2>
                                     <p className="text-body-secondary">
                                         Sign in to continue to your account
                                     </p>

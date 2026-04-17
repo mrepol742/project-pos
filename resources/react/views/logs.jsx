@@ -54,7 +54,7 @@ const Logs = () => {
     return (
         <>
             <Helmet>
-                <title>Logs - Project POS</title>
+                <title>Logs - Point of Sale</title>
             </Helmet>
 
             <CRow className="mb-3">

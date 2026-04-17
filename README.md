@@ -1,4 +1,4 @@
-# Project POS 
+# Point of Sale
 
 [![Build CI](https://github.com/mrepol742/project-pos/actions/workflows/build.yml/badge.svg)](https://github.com/mrepol742/project-pos/actions/workflows/build.yml)
 

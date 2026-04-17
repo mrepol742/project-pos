@@ -96,7 +96,7 @@ const Users = () => {
     return (
         <div>
             <Helmet>
-                <title>Users - Project POS</title>
+                <title>Users - Point of Sale</title>
             </Helmet>
             <AppModal
                 data={{

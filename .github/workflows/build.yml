@@ -40,8 +40,8 @@ jobs:
         image: mysql:8.0
         env:
           MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: project_pos
-          MYSQL_USER: project_pos
+          MYSQL_DATABASE: point_of_sale
+          MYSQL_USER: point_of_sale
           MYSQL_PASSWORD: secret_password_of_root
         ports:
           - 3306:3306
@@ -84,14 +84,14 @@ jobs:
         echo "DB_CONNECTION=mysql" >> .env
         echo "DB_HOST=127.0.0.1" >> .env
         echo "DB_PORT=3306" >> .env
-        echo "DB_DATABASE=project_pos" >> .env
-        echo "DB_USERNAME=project_pos" >> .env
+        echo "DB_DATABASE=point_of_sale" >> .env
+        echo "DB_USERNAME=point_of_sale" >> .env
         echo "DB_PASSWORD=secret_password_of_root" >> .env
         php artisan key:generate
 
     - name: Wait for MySQL
       run: |
-        until mysql -h 127.0.0.1 -u project_pos -psecret_password_of_root -e 'select 1'; do
+        until mysql -h 127.0.0.1 -u point_of_sale -psecret_password_of_root -e 'select 1'; do
           sleep 1
         done
 

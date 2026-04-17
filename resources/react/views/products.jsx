@@ -112,7 +112,7 @@ const Products = () => {
     return (
         <div>
             <Helmet>
-                <title>Products - Project POS</title>
+                <title>Products - Point of Sale</title>
             </Helmet>
             <AppModal
                 data={{

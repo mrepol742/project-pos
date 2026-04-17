@@ -416,7 +416,7 @@ const PointOfSale = () => {
                     textAlign: 'center',
                 }}
             >
-                <span style={{ fontSize: '4vw', fontWeight: 700, opacity: 0.08 }}>Project POS</span>
+                <span style={{ fontSize: '4vw', fontWeight: 700, opacity: 0.08 }}>Point of Sale</span>
                 <span className="d-block" style={{ opacity: 0.2 }}>
                     www.melvinjonesrepol.com
                 </span>

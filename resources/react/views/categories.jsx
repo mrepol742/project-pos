@@ -68,7 +68,7 @@ const Categories = () => {
     return (
         <div>
             <Helmet>
-                <title>Categories - Project POS</title>
+                <title>Categories - Point of Sale</title>
             </Helmet>
             <div className="d-flex justify-content-between align-items-center mb-3">
                 <h1>Categories</h1>

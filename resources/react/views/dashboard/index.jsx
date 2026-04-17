@@ -134,7 +134,7 @@ const Dashboard = () => {
     return (
         <div>
             <Helmet>
-                <title>Dashboard - Project POS</title>
+                <title>Dashboard - Point of Sale</title>
             </Helmet>
             <CRow className="mb-4" xs={{ gutter: 4 }}>
                 {widgetData.map((widget, index) => (

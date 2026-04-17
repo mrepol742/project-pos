@@ -7,7 +7,7 @@
             name="viewport"
             content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=no, maximum-scale=1.0, minimum-scale=1.0"
         />
-        <title>Project POS</title>
+        <title>Point of Sale</title>
         <link rel="manifest" href="/manifest.json" />
         <link rel="shortcut icon" href="/favicon.ico" />
         @viteReactRefresh
