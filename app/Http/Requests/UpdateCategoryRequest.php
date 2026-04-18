@@ -25,7 +25,7 @@ class UpdateCategoryRequest extends FormRequest
         $categoryId = is_object($category) ? $category->getKey() : $category;
 
         return [
-            'name' => 'required|string|max:255|unique:categories,name,' . $categoryId,
+            'name' => 'required|string|max:255|unique:categories,name' . $categoryId,
             'description' => 'nullable|string|max:1000',
         ];
     }

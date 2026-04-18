@@ -33,7 +33,8 @@ class UserController extends ApiController
     public function store(StoreUserRequest $request): JsonResponse
     {
         $validated = $request->validated();
-        $user = User::create($request->all());
+
+        $user = User::create($validated);
 
         return $this->success($user, 'User created successfully', 201);
     }
@@ -44,13 +45,11 @@ class UserController extends ApiController
      * @param UpdateUserRequest $request The validated request containing the data for updating the user.
      * @return JsonResponse The JSON response indicating the success or failure of the user update process, along with any relevant messages or errors.
      */
-    public function update(UpdateUserRequest $request, $id): JsonResponse
+    public function update(UpdateUserRequest $request, User $user): JsonResponse
     {
         $validated = $request->validated();
 
-        $user = User::findOrFail($id);
-
-        $user->update($request->all());
+        $user->update($validated);
 
         return $this->success($user, 'User updated successfully');
     }

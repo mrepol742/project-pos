@@ -50,6 +50,12 @@ class SalesController extends ApiController
         return $this->success($data, 'Today\'s sales retrieved successfully');
     }
 
+    /**
+     * Handle the checkout process for a sale.
+     *
+     * @param Request $request The incoming request containing the sale details.
+     * @return JsonResponse The JSON response indicating the success or failure of the checkout process, along with any relevant messages or errors.
+     */
     public function checkout(Request $request)
     {
         try {

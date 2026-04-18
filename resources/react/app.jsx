@@ -54,7 +54,12 @@ const App = () => {
                 </Suspense>
             </Router>
             <ToastContainer theme={storedTheme} transition={Slide} />
-            {/* <DevToolsDetector />*/}
+
+            {import.meta.env.VITE_ENV === 'production' && (
+                <>
+                    <DevToolsDetector />
+                </>
+            )}
         </div>
     )
 }

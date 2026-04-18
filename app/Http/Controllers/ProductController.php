@@ -80,13 +80,12 @@ class ProductController extends ApiController
      * Update the specified product in storage.
      *
      * @param UpdateProductRequest $request The validated request containing the data for updating the product.
+     * @param Product $product The product instance to be updated.
      * @return JsonResponse The JSON response indicating the success or failure of the product update process, along with any relevant messages or errors.
      */
-    public function update(UpdateProductRequest $request, $id): JsonResponse
+    public function update(UpdateProductRequest $request, Product $product): JsonResponse
     {
         $validated = $request->validated();
-
-        $product = Product::findOrFail($id);
 
         if ($request->hasFile('image')) {
             $imagePath = $request->file('image')->store('product_images', 'public');
@@ -113,12 +112,11 @@ class ProductController extends ApiController
     /**
      * Remove the specified product from storage.
      *
-     * @param int $id The ID of the product to be deleted.
+     * @param Product $product The product instance to be deleted.
      * @return JsonResponse The JSON response indicating the success or failure of the product deletion process, along with any relevant messages or errors.
      */
-    public function delete($id): JsonResponse
+    public function delete(Product $product): JsonResponse
     {
-        $product = Product::findOrFail($id);
         $product->delete();
 
         return $this->success($product, 'Product deleted successfully.');

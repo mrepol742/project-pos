@@ -43,11 +43,9 @@ class CategoryController extends ApiController
      * @param int $id The ID of the category to be updated.
      * @return JsonResponse The JSON response indicating the success or failure of the category update process, along with any relevant messages or errors.
      */
-    public function update(UpdateCategoryRequest $request, $id): JsonResponse
+    public function update(UpdateCategoryRequest $request, Category $category): JsonResponse
     {
         $validated = $request->validated();
-
-        $category = Category::findOrFail($id);
 
         $category->update($validated);
 
@@ -57,12 +55,11 @@ class CategoryController extends ApiController
     /**
      * Remove the specified resource from storage.
      *
-     * @param int $id The ID of the category to be deleted.
+     * @param Category $category The category to be deleted.
      * @return JsonResponse The JSON response indicating the success or failure of the category deletion process, along with any relevant messages or errors.
      */
-    public function delete($id): JsonResponse
+    public function delete(Category $category): JsonResponse
     {
-        $category = Category::findOrFail($id);
         $category->delete();
 
         return $this->success($category, 'Category deleted successfully.');

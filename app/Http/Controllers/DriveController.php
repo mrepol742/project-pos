@@ -35,10 +35,8 @@ class DriveController extends ApiController
      * @param int $id The ID of the file to be downloaded.
      * @return JsonResponse A JSON response containing the file download or an error message if the file is not found.
      */
-    public function show($id): JsonResponse
+    public function show(Drive $drive): JsonResponse
     {
-        $drive = Drive::findOrFail($id);
-
         if (!Storage::disk('private')->exists($drive->file_path)) {
             return $this->error('File not found', 404);
         }
@@ -54,7 +52,7 @@ class DriveController extends ApiController
      */
     public function store(StoreDriveRequest $request): JsonResponse
     {
-        $validated = $request->validated();
+        $request->validated();
 
         $file = $request->file('file');
         $fileName = $file->getClientOriginalName();
@@ -85,12 +83,11 @@ class DriveController extends ApiController
     /**
      * Delete a file by ID.
      *
-     * @param int $id The ID of the file to be deleted.
+     * @param Drive $drive The Drive model instance representing the file to be deleted.
      * @return JsonResponse A JSON response indicating the success or failure of the file deletion process, along with any relevant messages or errors.
      */
-    public function delete($id): JsonResponse
+    public function delete(Drive $drive): JsonResponse
     {
-        $drive = Drive::findOrFail($id);
         $drive->delete();
 
         return $this->success($drive, 'File deleted successfully');

@@ -53,7 +53,7 @@ class SalesLockController extends ApiController
 
         $salesLock = SaleLock::updateOrCreate(
             ['cashier_id' => Auth::user()->id],
-            ['products' => $request->input('products')],
+            ['products' => $validated['products']],
         );
 
         return $this->success($salesLock, 'Sales lock saved successfully');
