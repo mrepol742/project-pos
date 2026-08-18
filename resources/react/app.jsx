@@ -7,7 +7,6 @@ import AppErrorBoundary from './components/error-boundary'
 import AOS from 'aos'
 import './scss/style.scss'
 import Auth from './components/auth'
-import DevToolsDetector from './components/devtools-detector'
 
 const DefaultLayout = lazy(() => import('./layout/default-layout'))
 const Login = lazy(() => import('./views/auth/login'))
@@ -54,12 +53,6 @@ const App = () => {
                 </Suspense>
             </Router>
             <ToastContainer theme={storedTheme} transition={Slide} />
-
-            {import.meta.env.VITE_ENV === 'production' && (
-                <>
-                    <DevToolsDetector />
-                </>
-            )}
         </div>
     )
 }

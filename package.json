@@ -24,7 +24,6 @@
     "chart.js": "^4.5.1",
     "classnames": "^2.5.1",
     "core-js": "^3.49.0",
-    "devtools-detector": "^2.0.25",
     "js-cookie": "^3.0.5",
     "prop-types": "^15.8.1",
     "react": "^18.3.1",
